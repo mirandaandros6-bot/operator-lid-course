@@ -1,0 +1,4040 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SunLife — Курс оператора</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #0d0f14;
+  --bg2: #12151c;
+  --bg3: #181c26;
+  --card: #1a1f2e;
+  --card2: #1e2333;
+  --border: #2a3050;
+  --accent: #f5c518;
+  --accent2: #ffd700;
+  --accent-glow: rgba(245,197,24,0.18);
+  --blue: #4a90d9;
+  --blue2: #60a5f8;
+  --green: #27ae60;
+  --green2: #2ecc71;
+  --red: #e74c3c;
+  --red2: #ff6b6b;
+  --purple: #8b5cf6;
+  --text: #e8ecf4;
+  --text2: #a8b3cc;
+  --text3: #6b7a99;
+  --radius: 14px;
+  --radius2: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ===== HIDDEN INPUTS (CSS HACK) ===== */
+input[type="radio"], input[type="checkbox"] { display: none; }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  overflow: hidden;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,197,24,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 60% 40% at 80% 100%, rgba(74,144,217,0.06) 0%, transparent 60%),
+              var(--bg);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(245,197,24,0.04) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(74,144,217,0.04) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(245,197,24,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(245,197,24,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,197,24,0.1);
+  border: 1px solid rgba(245,197,24,0.3);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  animation: fadeInDown 0.8s ease;
+}
+
+.hero-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(32px, 6vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  animation: fadeInUp 0.8s 0.1s both ease;
+}
+
+.hero-title span { color: var(--accent); }
+
+.hero-subtitle {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(14px, 2.5vw, 20px);
+  font-weight: 400;
+  color: var(--text2);
+  margin-bottom: 40px;
+  animation: fadeInUp 0.8s 0.2s both ease;
+}
+
+.hero-desc {
+  max-width: 560px;
+  color: var(--text2);
+  font-size: 15px;
+  margin: 0 auto 48px;
+  animation: fadeInUp 0.8s 0.3s both ease;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.8s 0.4s both ease;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.hero-stat-label {
+  font-size: 12px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== MODULES NAVIGATION ===== */
+/* CSS-only navigation via radio inputs */
+#nav-m1:checked ~ .shell .module-1,
+#nav-m2:checked ~ .shell .module-2,
+#nav-m3:checked ~ .shell .module-3,
+#nav-m4:checked ~ .shell .module-4,
+#nav-m5:checked ~ .shell .module-5,
+#nav-final:checked ~ .shell .module-final,
+#nav-hero:checked ~ .shell .hero { display: flex; }
+
+#nav-m1:checked ~ .shell .module-2,
+#nav-m1:checked ~ .shell .module-3,
+#nav-m1:checked ~ .shell .module-4,
+#nav-m1:checked ~ .shell .module-5,
+#nav-m1:checked ~ .shell .module-final,
+#nav-m1:checked ~ .shell .hero { display: none; }
+
+#nav-m2:checked ~ .shell .module-1,
+#nav-m2:checked ~ .shell .module-3,
+#nav-m2:checked ~ .shell .module-4,
+#nav-m2:checked ~ .shell .module-5,
+#nav-m2:checked ~ .shell .module-final,
+#nav-m2:checked ~ .shell .hero { display: none; }
+
+#nav-m3:checked ~ .shell .module-1,
+#nav-m3:checked ~ .shell .module-2,
+#nav-m3:checked ~ .shell .module-4,
+#nav-m3:checked ~ .shell .module-5,
+#nav-m3:checked ~ .shell .module-final,
+#nav-m3:checked ~ .shell .hero { display: none; }
+
+#nav-m4:checked ~ .shell .module-1,
+#nav-m4:checked ~ .shell .module-2,
+#nav-m4:checked ~ .shell .module-3,
+#nav-m4:checked ~ .shell .module-5,
+#nav-m4:checked ~ .shell .module-final,
+#nav-m4:checked ~ .shell .hero { display: none; }
+
+#nav-m5:checked ~ .shell .module-1,
+#nav-m5:checked ~ .shell .module-2,
+#nav-m5:checked ~ .shell .module-3,
+#nav-m5:checked ~ .shell .module-4,
+#nav-m5:checked ~ .shell .module-final,
+#nav-m5:checked ~ .shell .hero { display: none; }
+
+#nav-final:checked ~ .shell .module-1,
+#nav-final:checked ~ .shell .module-2,
+#nav-final:checked ~ .shell .module-3,
+#nav-final:checked ~ .shell .module-4,
+#nav-final:checked ~ .shell .module-5,
+#nav-final:checked ~ .shell .hero { display: none; }
+
+#nav-hero:checked ~ .shell .module-1,
+#nav-hero:checked ~ .shell .module-2,
+#nav-hero:checked ~ .shell .module-3,
+#nav-hero:checked ~ .shell .module-4,
+#nav-hero:checked ~ .shell .module-5,
+#nav-hero:checked ~ .shell .module-final { display: none; }
+
+/* Default: show hero, hide modules */
+.module-1, .module-2, .module-3, .module-4, .module-5, .module-final { display: none; }
+.hero { display: flex; }
+
+/* ===== MODULE LAYOUT ===== */
+.module-page {
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.module-header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.module-header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.module-header-info { flex: 1; }
+
+.module-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.module-name {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 16px;
+  border-radius: var(--radius2);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: rgba(245,197,24,0.08);
+  border-color: rgba(245,197,24,0.3);
+  color: var(--accent);
+}
+
+.module-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  width: 100%;
+}
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 40px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 28px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.section-intro {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+
+/* ===== CARDS ===== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.info-card:hover {
+  border-color: rgba(245,197,24,0.3);
+  transform: translateY(-2px);
+}
+
+.info-card-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.info-card-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-card p {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ===== FLIP CARDS ===== */
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.flip-card {
+  height: 200px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-front, .flip-back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.flip-front {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.flip-front-icon { font-size: 30px; margin-bottom: 8px; flex-shrink: 0; }
+.flip-front-label {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.flip-back {
+  background: linear-gradient(135deg, var(--card2), rgba(245,197,24,0.1));
+  border: 1px solid rgba(245,197,24,0.4);
+  transform: rotateY(180deg);
+  overflow-y: auto;
+  justify-content: center;
+  padding: 14px 12px;
+}
+
+.flip-back p {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+/* ===== ACCORDION ===== */
+.accordion { margin: 16px 0; }
+
+.accordion-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.accordion-item:has(.acc-toggle:checked) {
+  border-color: rgba(245,197,24,0.4);
+}
+
+.acc-toggle { display: none; }
+
+.accordion-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 15px;
+  gap: 12px;
+  user-select: none;
+}
+
+.accordion-label .acc-arrow {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 2px solid var(--text3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text3);
+  transition: all 0.3s;
+}
+
+.acc-toggle:checked ~ .accordion-label .acc-arrow {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  transform: rotate(180deg);
+}
+
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.acc-toggle:checked ~ .accordion-body {
+  max-height: 2000px;
+}
+
+.accordion-body-inner {
+  padding: 0 22px 22px;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.8;
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+}
+
+/* ===== SCRIPT BOX ===== */
+.script-box {
+  background: linear-gradient(135deg, rgba(245,197,24,0.06), rgba(74,144,217,0.04));
+  border: 1px solid rgba(245,197,24,0.25);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin: 16px 0;
+  position: relative;
+}
+
+.script-box::before {
+  content: '💬 СКРИПТ';
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.script-box p, .script-box .script-text {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  font-style: italic;
+}
+
+/* ===== RULE BOXES ===== */
+.rule-box {
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 16px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.rule-box-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rule-box-content { flex: 1; }
+
+.rule-box-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.rule-box p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.rule-box.forbidden {
+  background: rgba(231,76,60,0.08);
+  border: 1px solid rgba(231,76,60,0.25);
+}
+
+.rule-box.forbidden .rule-box-title { color: var(--red2); }
+.rule-box.forbidden p { color: var(--text2); }
+
+.rule-box.allowed {
+  background: rgba(39,174,96,0.08);
+  border: 1px solid rgba(39,174,96,0.25);
+}
+
+.rule-box.allowed .rule-box-title { color: var(--green2); }
+.rule-box.allowed p { color: var(--text2); }
+
+.rule-box.tip {
+  background: rgba(245,197,24,0.07);
+  border: 1px solid rgba(245,197,24,0.25);
+}
+
+.rule-box.tip .rule-box-title { color: var(--accent); }
+.rule-box.tip p { color: var(--text2); }
+
+.rule-box.info {
+  background: rgba(74,144,217,0.08);
+  border: 1px solid rgba(74,144,217,0.25);
+}
+
+.rule-box.info .rule-box-title { color: var(--blue2); }
+.rule-box.info p { color: var(--text2); }
+
+/* ===== COMPARISON TABLE ===== */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.compare-table th {
+  background: var(--card2);
+  padding: 14px 18px;
+  text-align: left;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table th:first-child { color: var(--red2); }
+.compare-table th:last-child { color: var(--green2); }
+
+.compare-table td {
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:nth-child(even) td { background: var(--card2); }
+
+/* ===== BUDGET TABLE ===== */
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.budget-table thead th {
+  background: rgba(245,197,24,0.12);
+  color: var(--accent);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.budget-table tbody td {
+  padding: 10px 16px;
+  background: var(--card);
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+}
+
+.budget-table tbody tr:nth-child(even) td { background: var(--card2); }
+.budget-table tbody td:last-child { color: var(--accent); font-weight: 700; }
+
+/* ===== STEP CHAIN ===== */
+.step-chain { margin: 24px 0; }
+
+.step-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(245,197,24,0.12);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.step-connector {
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(var(--accent), var(--border));
+  margin-left: 17px;
+  margin-bottom: 4px;
+}
+
+/* ===== OBJECTION CARDS ===== */
+.obj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.obj-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.obj-card:hover { border-color: rgba(245,197,24,0.3); }
+
+.obj-card-trigger {
+  padding: 16px 18px;
+  background: rgba(231,76,60,0.08);
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  color: var(--red2);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.obj-card-body {
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.obj-card-response {
+  margin-top: 10px;
+  background: rgba(245,197,24,0.06);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  border-radius: 0 var(--radius2) var(--radius2) 0;
+  font-style: italic;
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* ===== CHECKLIST ===== */
+.checklist {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+
+.checklist-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.check-item:last-child { border-bottom: none; }
+
+.check-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(39,174,96,0.15);
+  border: 1px solid rgba(39,174,96,0.4);
+  color: var(--green2);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ===== QUIZ SECTION ===== */
+.quiz-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  margin: 40px 0;
+}
+
+.quiz-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.quiz-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.quiz-subtitle {
+  color: var(--text3);
+  font-size: 13px;
+}
+
+/* Question */
+.quiz-question {
+  margin-bottom: 28px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+}
+
+.q-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.q-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.options { display: flex; flex-direction: column; gap: 8px; }
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: var(--text2);
+  user-select: none;
+}
+
+.option-label:hover {
+  background: rgba(245,197,24,0.06);
+  border-color: rgba(245,197,24,0.25);
+  color: var(--text);
+}
+
+.option-key {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+/* ===== NAV BUTTONS ===== */
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+  outline: none;
+}
+
+.nav-btn.primary {
+  background: var(--accent);
+  color: #000;
+}
+
+.nav-btn.primary:hover {
+  background: var(--accent2);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(245,197,24,0.3);
+}
+
+.nav-btn.secondary {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+
+.nav-btn.secondary:hover {
+  background: rgba(255,255,255,0.12);
+  color: var(--text);
+}
+
+.nav-btn label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.next-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+/* ===== BADGE DISPLAY ===== */
+.badge-earned {
+  display: none;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(245,197,24,0.12), rgba(245,197,24,0.04));
+  border: 1px solid rgba(245,197,24,0.4);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 24px 0;
+  animation: badgePop 0.6s ease;
+}
+
+.badge-icon { font-size: 40px; }
+
+.badge-info {}
+.badge-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.badge-name {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.badge-desc {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-wrap {
+  background: var(--bg3);
+  border-radius: 100px;
+  height: 8px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 1s ease;
+}
+
+/* ===== MODULES MAP (Hero) ===== */
+.modules-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+  animation: fadeInUp 0.8s 0.5s both ease;
+}
+
+.module-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.module-card:hover::before { transform: scaleX(1); }
+
+.module-card:hover {
+  border-color: rgba(245,197,24,0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+.mc-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.mc-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+
+.mc-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.mc-desc {
+  font-size: 13px;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
+.mc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(245,197,24,0.08);
+  border: 1px solid rgba(245,197,24,0.2);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+/* ===== HERO BOTTOM ===== */
+.hero-bottom {
+  width: 100%;
+  max-width: 980px;
+  padding: 0 24px;
+  margin-top: 60px;
+  animation: fadeInUp 0.8s 0.6s both ease;
+}
+
+.hero-start-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.start-btn-big {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 18px 40px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  box-shadow: 0 0 40px rgba(245,197,24,0.25);
+  animation: pulse 2s infinite;
+}
+
+.start-btn-big:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 60px rgba(245,197,24,0.4);
+}
+
+.start-hint {
+  font-size: 13px;
+  color: var(--text3);
+}
+
+/* ===== FINAL SCREEN ===== */
+.final-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 60px 24px;
+  text-align: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,197,24,0.1) 0%, transparent 60%), var(--bg);
+}
+
+.final-hero-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.final-trophy {
+  font-size: 72px;
+  line-height: 1;
+  animation: trophySpin 1s ease;
+  display: block;
+}
+
+.final-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.final-title span { color: var(--accent); }
+
+.final-subtitle {
+  font-size: 16px;
+  color: var(--text2);
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+.badges-parade {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+.parade-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid rgba(245,197,24,0.25);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  min-width: 100px;
+  animation: badgePop 0.6s ease both;
+}
+
+.parade-badge-icon { font-size: 32px; }
+.parade-badge-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+}
+
+.final-score-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 40px;
+  margin: 24px auto;
+  max-width: 400px;
+}
+
+.final-score-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.final-score-label {
+  font-size: 14px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes badgePop { 0% { opacity: 0; transform: scale(0.5) rotate(-10deg); } 70% { transform: scale(1.1) rotate(3deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+@keyframes trophySpin { from { transform: rotate(-10deg) scale(0.7); opacity: 0; } 70% { transform: rotate(5deg) scale(1.1); } to { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 40px rgba(245,197,24,0.25); } 50% { box-shadow: 0 0 60px rgba(245,197,24,0.45); } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ===== TEXT UTILITIES ===== */
+.yellow { color: var(--accent); }
+.green-text { color: var(--green2); }
+.red-text { color: var(--red2); }
+.blue-text { color: var(--blue2); }
+.muted { color: var(--text3); }
+
+.mt-24 { margin-top: 24px; }
+.mt-16 { margin-top: 16px; }
+.mb-16 { margin-bottom: 16px; }
+
+.text-center { text-align: center; }
+
+/* Text block */
+.text-block {
+  color: var(--text2);
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 16px 0;
+}
+
+.text-block strong { color: var(--text); font-weight: 700; }
+.text-block .yellow { color: var(--accent); font-weight: 600; }
+.text-block em { color: var(--accent); font-style: normal; }
+
+/* ===== FULL QUIZ IMPLEMENTATION ===== */
+/* Using nested CSS to show correct/wrong per question based on which radio is checked */
+/* Each question block has its own radio group. The feedback divs are positioned after the options. */
+
+.quiz-q {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 16px;
+}
+
+.quiz-q .q-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+/* Make option labels work inline with radio inputs */
+.opt-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.opt-item input[type="radio"] { display: none; }
+
+.opt-item label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: var(--text2);
+  user-select: none;
+  line-height: 1.5;
+}
+
+.opt-item label:hover {
+  background: rgba(245,197,24,0.05);
+  border-color: rgba(245,197,24,0.2);
+  color: var(--text);
+}
+
+.opt-item input[type="radio"]:checked + label {
+  border-color: rgba(74,144,217,0.5);
+  background: rgba(74,144,217,0.07);
+  color: var(--text);
+}
+
+.opt-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.opt-item input[type="radio"]:checked + label .opt-letter {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* CORRECT ANSWER — only highlighted by JS after user selects an option */
+.correct-answer input[type="radio"]:checked + label {
+  border-color: var(--green2) !important;
+  background: rgba(39,174,96,0.15) !important;
+}
+
+.correct-answer input[type="radio"]:checked + label .opt-letter {
+  background: var(--green2) !important;
+  color: #000 !important;
+}
+
+/* WRONG ANSWER */
+.wrong-answer input[type="radio"]:checked + label {
+  border-color: var(--red2) !important;
+  background: rgba(231,76,60,0.1) !important;
+}
+
+.wrong-answer input[type="radio"]:checked + label .opt-letter {
+  background: var(--red2) !important;
+  color: #fff !important;
+}
+
+/* feedback shown on selection */
+.qfb { display: none; margin-top: 8px; padding: 10px 14px; border-radius: var(--radius2); font-size: 13px; font-weight: 600; animation: fadeIn 0.3s; }
+.qfb-ok { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.3); color: var(--green2); }
+.qfb-err { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: var(--red2); }
+
+/* ===== DIVIDER ===== */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 32px 0;
+}
+
+/* ===== HIGHLIGHT BOX ===== */
+.highlight-box {
+  background: linear-gradient(135deg, rgba(245,197,24,0.08), transparent);
+  border: 1px solid rgba(245,197,24,0.25);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+
+.highlight-box strong { color: var(--accent); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .module-content { padding: 24px 16px 60px; }
+  .quiz-section { padding: 22px 16px; }
+  .flip-grid { grid-template-columns: 1fr 1fr; }
+  .modules-map { grid-template-columns: 1fr; }
+}
+
+/* ===== INLINE SCRIPT QUOTE ===== */
+.inline-quote {
+  display: block;
+  background: rgba(245,197,24,0.06);
+  border-left: 3px solid var(--accent);
+  padding: 10px 16px;
+  border-radius: 0 var(--radius2) var(--radius2) 0;
+  font-style: italic;
+  color: var(--text);
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* TAG */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.tag.yellow { background: rgba(245,197,24,0.12); color: var(--accent); border: 1px solid rgba(245,197,24,0.25); }
+.tag.green { background: rgba(39,174,96,0.12); color: var(--green2); border: 1px solid rgba(39,174,96,0.25); }
+.tag.red { background: rgba(231,76,60,0.12); color: var(--red2); border: 1px solid rgba(231,76,60,0.25); }
+.tag.blue { background: rgba(74,144,217,0.12); color: var(--blue2); border: 1px solid rgba(74,144,217,0.25); }
+
+.tags-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+/* ===== Module color accents ===== */
+.mod1 .module-header-icon { background: rgba(245,197,24,0.12); }
+.mod2 .module-header-icon { background: rgba(74,144,217,0.12); }
+.mod3 .module-header-icon { background: rgba(139,92,246,0.12); }
+.mod4 .module-header-icon { background: rgba(39,174,96,0.12); }
+.mod5 .module-header-icon { background: rgba(231,76,60,0.12); }
+
+/* ===== SCORE DISPLAY ===== */
+.score-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 28px;
+  margin: 20px 0;
+}
+
+.score-item {
+  text-align: center;
+}
+
+.score-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.score-lbl {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.score-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+}
+
+/* ===== MODULE COMPLETE BANNER ===== */
+.module-complete {
+  display: none;
+  background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(245,197,24,0.06));
+  border: 1px solid rgba(39,174,96,0.35);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.mc-check {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.mc-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green2);
+  margin-bottom: 6px;
+}
+
+.mc-subtitle {
+  font-size: 14px;
+  color: var(--text2);
+}
+
+</style>
+</head>
+<body>
+
+<!-- ===== NAV RADIO INPUTS ===== -->
+<input type="radio" name="nav" id="nav-hero" checked>
+<input type="radio" name="nav" id="nav-m1">
+<input type="radio" name="nav" id="nav-m2">
+<input type="radio" name="nav" id="nav-m3">
+<input type="radio" name="nav" id="nav-m4">
+<input type="radio" name="nav" id="nav-m5">
+<input type="radio" name="nav" id="nav-final">
+
+<div class="shell">
+
+<!-- ================================================================
+     HERO / LANDING
+================================================================ -->
+<div class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="hero-badge">
+    <span>🏠</span> Учебный курс SunLife
+  </div>
+
+  <h1 class="hero-title">Добро пожаловать,<br><span>будущий оператор!</span></h1>
+  <p class="hero-subtitle">Полный курс подготовки к работе на линии</p>
+
+  <p class="hero-desc">
+    Здесь ты узнаешь всё о работе оператора: кто наши клиенты, как вести диалог, отрабатывать возражения и квалифицировать лиды. Изучи все модули, пройди тесты и получи бейджи!
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">5</div>
+      <div class="hero-stat-label">Модулей</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">30+</div>
+      <div class="hero-stat-label">Вопросов</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">8</div>
+      <div class="hero-stat-label">Бейджей</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">~30</div>
+      <div class="hero-stat-label">Минут</div>
+    </div>
+  </div>
+
+  <div class="modules-map">
+    <div class="module-card">
+      <span class="mc-icon">🏢</span>
+      <div class="mc-num">Модуль 1</div>
+      <div class="mc-title">Кто мы и как работаем</div>
+      <div class="mc-desc">О компании, клиентах, городах и основных принципах</div>
+      <div class="mc-badge">🥇 Первый шаг</div>
+    </div>
+    <div class="module-card">
+      <span class="mc-icon">📞</span>
+      <div class="mc-num">Модуль 2</div>
+      <div class="mc-title">Приветствие и начало диалога</div>
+      <div class="mc-desc">Скрипт приветствия и работа с первыми возражениями</div>
+      <div class="mc-badge">📚 Прилежный ученик</div>
+    </div>
+    <div class="module-card">
+      <span class="mc-icon">🛡️</span>
+      <div class="mc-num">Модуль 3</div>
+      <div class="mc-title">Работа с возражениями</div>
+      <div class="mc-desc">Все виды возражений и как их отрабатывать</div>
+      <div class="mc-badge">🛡️ Мастер диалога</div>
+    </div>
+    <div class="module-card">
+      <span class="mc-icon">❓</span>
+      <div class="mc-num">Модуль 4</div>
+      <div class="mc-title">Проведение опроса</div>
+      <div class="mc-desc">Район, тип, бюджет, оплата — главные вопросы лида</div>
+      <div class="mc-badge">🎯 Квалификатор</div>
+    </div>
+    <div class="module-card">
+      <span class="mc-icon">🚫</span>
+      <div class="mc-num">Модуль 5</div>
+      <div class="mc-title">Завершение и запреты</div>
+      <div class="mc-desc">Правила прощания и критические запреты</div>
+      <div class="mc-badge">🤐 Молчание — золото</div>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-start-row">
+      <label class="start-btn-big" for="nav-m1">
+        🚀 Начать курс
+      </label>
+      <p class="start-hint">Нажми кнопку, чтобы начать с Модуля 1</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     MODULE 1: КТО МЫ И КАК РАБОТАЕМ
+================================================================ -->
+<div class="module-page module-1 mod1">
+  <div class="module-header">
+    <label class="back-btn" for="nav-hero">← На главную</label>
+    <div class="module-header-icon">🏢</div>
+    <div class="module-header-info">
+      <div class="module-num">Модуль 1 из 5</div>
+      <div class="module-name">Кто мы и как работаем</div>
+    </div>
+  </div>
+
+  <div class="module-content">
+
+    <!-- Intro -->
+    <div class="section-intro">
+      🎉 Добро пожаловать, будущий оператор! Ты вступаешь в команду оператора компании SunLife.
+    </div>
+
+    <h2 class="section-title">Что за компания?</h2>
+    <div class="text-block">
+      <strong>SunLife</strong> — агентство по подбору недвижимости с упором на новостройки в Москве, с собственным отделом продаж.
+    </div>
+
+    <div class="cards-grid">
+      <div class="info-card">
+        <span class="info-card-icon">✅</span>
+        <div class="info-card-title">Только для себя</div>
+        <p>Лиды формируем только для себя — не перепродаём конкурентам</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🤝</span>
+        <div class="info-card-title">От А до Я</div>
+        <p>Наши специалисты ведут клиента от начала до конца: подборки, офис, бронирование, сделка</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🏗️</span>
+        <div class="info-card-title">Основной продукт</div>
+        <p>Квартиры и апартаменты в новостройках Москвы</p>
+      </div>
+    </div>
+
+    <div class="rule-box tip">
+      <div class="rule-box-icon">💡</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Наша задача</div>
+        <p>Пока конкуренты перепродают номера клиентов, мы строим реальные отношения. Скрипт короткий — нам не нужен 20-минутный допрос. Наша задача подогреть лид для нашего специалиста, просто подтвердив актуальность покупки. Мы (операторы) не продаём, мы просто квалифицируем.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">С какими городами работаем?</h2>
+
+    <!-- Flip cards for cities -->
+    <div class="flip-grid">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <div class="flip-front-icon">🏗️</div>
+            <div class="flip-front-label">Новостройки</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px;">Наведи для подробностей</div>
+          </div>
+          <div class="flip-back">
+            <p>Москва, Новая Москва, Ближайшее Подмосковье: Одинцово, Красногорск, Химки, Мытищи, Пушкино, Реутов, Люберцы, Видное, <strong>Краснодар, Сочи</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <div class="flip-front-icon">🏠</div>
+            <div class="flip-front-label">Вторичка</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px;">Наведи для подробностей</div>
+          </div>
+          <div class="flip-back">
+            <p>Только <strong>Москва</strong> и <strong>Новая Москва</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <div class="flip-front-icon">🚫</div>
+            <div class="flip-front-label">Дома / Участки / Коммерция</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px;">Наведи для подробностей</div>
+          </div>
+          <div class="flip-back">
+            <p style="color:var(--red2)"><strong>Не работаем!</strong><br>Только квартиры и апартаменты.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Кто наши клиенты?</h2>
+
+    <div class="text-block">
+      <strong>Клиент в базе</strong> — это человек, который:
+    </div>
+
+    <div class="step-chain">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">Искал квартиру в Москве</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">Оставил заявку на одной из наших платформ, сайте или в социальных сетях</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">При этом клиент оставляет заявки не только у нас — он смотрит множество различных сайтов: ЦИАН, Авито</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">Результат: клиенту звонят <strong style="color:var(--accent)">ВСЕ</strong> — и мы, и конкуренты. К моменту нашего звонка ему уже могли позвонить 5, 10, 20 операторов</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Почему клиент злится?</h2>
+
+    <div class="step-chain">
+      <div class="step-item">
+        <div class="step-num" style="background:rgba(39,174,96,0.15);border-color:var(--green2);color:var(--green2)">😊</div>
+        <div class="step-content">Звонки 1–2: «Ладно, отвечу»</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="background:rgba(245,197,24,0.12);border-color:var(--accent);color:var(--accent)">😐</div>
+        <div class="step-content">Звонки 3–5: «Ну сколько можно...»</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="background:rgba(231,76,60,0.12);border-color:var(--red2);color:var(--red2)">😤</div>
+        <div class="step-content">Звонок 7: «Не оставлял я заявку!»</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="background:rgba(231,76,60,0.2);border-color:var(--red2);color:var(--red2)">💥</div>
+        <div class="step-content">Звонок 10+: Клиент на негативе и ему всё равно, кому он давал разрешения звонить</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Мы vs Конкуренты</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>❌ Конкуренты</th>
+          <th>✅ Мы</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Покупают базу лидов или перепродают</td>
+          <td>Генерируем лиды сами, только для себя</td>
+        </tr>
+        <tr>
+          <td>Передают клиента кому попало</td>
+          <td>Передаём клиента НАШЕМУ специалисту (с разрешения самого клиента)</td>
+        </tr>
+        <tr>
+          <td>После звонка — тишина</td>
+          <td>Наш специалист ведёт клиента от А до Я</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Как представляем компанию?</h2>
+
+    <div class="rule-box forbidden">
+      <div class="rule-box-icon">🤫</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">ЗАПРЕЩЕНО</div>
+        <p>Говорить, что компания называется «SunLife» клиентам — ЗАПРЕЩЕНО. Клиент оставлял заявку на площадках с общими названиями. Злой клиент, узнав название, пойдёт оставлять негативные отзывы на наших официальных площадках — репутация компании пострадает.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m1-1" class="acc-toggle">
+        <label class="accordion-label" for="acc-m1-1">
+          💬 Если клиент спрашивает «Кто Вы? Что за компания?»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Центр по подбору новостроек, мы официальный партнёр всех ведущих застройщиков Москвы и Московской области. Наши услуги для клиентов абсолютно бесплатны. Задам буквально пару вопросов по Вашей ситуации, хорошо?</div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m1-2" class="acc-toggle">
+        <label class="accordion-label" for="acc-m1-2">
+          💬 Если клиент настаивает и спрашивает, как найти сайт
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Центр по подбору новостроек - это и есть название. Мы находимся в Москва Сити. Также наш специалист, когда свяжется с Вами, предоставит Вам все необходимые документы, ответит на любые вопросы и пригласит в офис для личного знакомства, если Вам это будет необходимо. Подскажите, в какой районе рассматриваете покупку?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ===== QUIZ M1 ===== -->
+    <div class="quiz-section">
+      <div class="quiz-header">
+        <div class="quiz-title">🧠 Проверь себя — Модуль 1</div>
+        <div class="quiz-subtitle">Ответь на все вопросы правильно (минимум 80%), чтобы перейти к следующему модулю</div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 1 из 5</div>
+        <div class="q-text">Как оператор представляет компанию клиенту?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q1" id="m1q1a"><label for="m1q1a"><span class="opt-letter">A</span> Компания Санлайф</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m1q1" id="m1q1b"><label for="m1q1b"><span class="opt-letter">B</span> Центр по подбору новостроек</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q1" id="m1q1c"><label for="m1q1c"><span class="opt-letter">C</span> Агентство недвижимости Санлайф</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q1" id="m1q1d"><label for="m1q1d"><span class="opt-letter">D</span> Отдел продаж</label></div>
+        </div>
+        <div id="m1q1-ok" class="qfb qfb-ok" style="display:none">✅ Правильно! Название «SunLife» озвучивать клиентам ЗАПРЕЩЕНО. Всегда представляем как «Центр по подбору новостроек».</div>
+        <div id="m1q1-err" class="qfb qfb-err" style="display:none">❌ Неверно. Правильный ответ: B — Центр по подбору новостроек. Название «SunLife» клиентам не называем.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 2 из 5</div>
+        <div class="q-text">Клиент хочет квартиру в Казани. Что делаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q2" id="m1q2a"><label for="m1q2a"><span class="opt-letter">A</span> Помогаем найти квартиру в Казани</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m1q2" id="m1q2b"><label for="m1q2b"><span class="opt-letter">B</span> Говорим, что не работаем с Казанью, и предлагаем Москву</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q2" id="m1q2c"><label for="m1q2c"><span class="opt-letter">C</span> Переключаем на другой отдел</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q2" id="m1q2d"><label for="m1q2d"><span class="opt-letter">D</span> Отправляем подборку по Казани</label></div>
+        </div>
+        <div id="m1q2-ok" class="qfb qfb-ok" style="display:none">✅ Правильно! Казань не в нашем списке. Объясняем и предлагаем рассмотреть Москву как инвестицию.</div>
+        <div id="m1q2-err" class="qfb qfb-err" style="display:none">❌ Неверно. Правильный ответ: B — Казань не в нашем списке. Объясняем клиенту и предлагаем рассмотреть Москву.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 3 из 5</div>
+        <div class="q-text">Что из перечисленного мы продаём?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q3" id="m1q3a"><label for="m1q3a"><span class="opt-letter">A</span> Дома и коттеджи</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q3" id="m1q3b"><label for="m1q3b"><span class="opt-letter">B</span> Земельные участки</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m1q3" id="m1q3c"><label for="m1q3c"><span class="opt-letter">C</span> Квартиры в новостройках Москвы</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q3" id="m1q3d"><label for="m1q3d"><span class="opt-letter">D</span> Офисы в регионах</label></div>
+        </div>
+        <div id="m1q3-ok" class="qfb qfb-ok" style="display:none">✅ Правильно! Только квартиры и апартаменты в новостройках. Дома, участки — не наш профиль.</div>
+        <div id="m1q3-err" class="qfb qfb-err" style="display:none">❌ Неверно. Правильный ответ: C — только квартиры и апартаменты в новостройках.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 4 из 5</div>
+        <div class="q-text">Почему клиент может говорить «я не оставлял заявку»?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q4" id="m1q4a"><label for="m1q4a"><span class="opt-letter">A</span> База данных устарела</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m1q4" id="m1q4b"><label for="m1q4b"><span class="opt-letter">B</span> Посещал много сайтов и не помнит, где именно оставил заявку</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q4" id="m1q4c"><label for="m1q4c"><span class="opt-letter">C</span> Наш маркетинг плохо работает</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q4" id="m1q4d"><label for="m1q4d"><span class="opt-letter">D</span> Так не бывает</label></div>
+        </div>
+        <div id="m1q4-ok" class="qfb qfb-ok" style="display:none">✅ Правильно! Клиент заходил на много сайтов и не помнит источник. Или говорит так специально, чтобы отстали.</div>
+        <div id="m1q4-err" class="qfb qfb-err" style="display:none">❌ Неверно. Правильный ответ: B — клиент посещал много сайтов и просто не помнит, где оставлял заявку.</div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 5 из 5</div>
+        <div class="q-text">Сколько времени занимает наш диалог с клиентом?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q5" id="m1q5a"><label for="m1q5a"><span class="opt-letter">A</span> 10–15 минут</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q5" id="m1q5b"><label for="m1q5b"><span class="opt-letter">B</span> 5–7 минут</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m1q5" id="m1q5c"><label for="m1q5c"><span class="opt-letter">C</span> 1–2 минуты</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m1q5" id="m1q5d"><label for="m1q5d"><span class="opt-letter">D</span> 30 секунд</label></div>
+        </div>
+        <div id="m1q5-ok" class="qfb qfb-ok" style="display:none">✅ Правильно! Диалог — 1-2 минуты. Мы не консультируем, мы квалифицируем.</div>
+        <div id="m1q5-err" class="qfb qfb-err" style="display:none">❌ Неверно. Правильный ответ: C — 1–2 минуты. Мы не консультируем, мы квалифицируем.</div>
+      </div>
+
+      <!-- SCORE INFO -->
+      <div class="highlight-box" style="margin-top:24px">
+        <strong>⚠️ Важно:</strong> Для перехода к следующему модулю необходимо ответить правильно на все 5 вопросов (100%). Если допустил ошибку — ответ выделен, прочитай объяснение и запомни правильный ответ перед переходом.
+      </div>
+
+      <!-- Module complete + badge -->
+      <div class="module-complete" style="margin-top:28px">
+        <div class="mc-check">🏅</div>
+        <div class="mc-title">Модуль 1 пройден!</div>
+        <div class="mc-subtitle">Ты получаешь бейдж <strong style="color:var(--accent)">🥇 «Первый шаг»</strong><br>Переходи к следующему модулю!</div>
+      </div>
+
+      <div class="badge-earned">
+        <div class="badge-icon">🥇</div>
+        <div class="badge-info">
+          <div class="badge-label">Получен бейдж</div>
+          <div class="badge-name">Первый шаг</div>
+          <div class="badge-desc">Пройден Модуль 1 — «Кто мы и как работаем»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-btn-wrapper">
+      <div class="nav-btn primary"><label for="nav-m2">Модуль 2: Приветствие →</label></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ================================================================
+     MODULE 2: ПРИВЕТСТВИЕ И НАЧАЛО ДИАЛОГА
+================================================================ -->
+<div class="module-page module-2 mod2">
+  <div class="module-header">
+    <label class="back-btn" for="nav-m1">← Модуль 1</label>
+    <div class="module-header-icon">📞</div>
+    <div class="module-header-info">
+      <div class="module-num">Модуль 2 из 5</div>
+      <div class="module-name">Приветствие и начало диалога</div>
+    </div>
+  </div>
+
+  <div class="module-content">
+
+    <h2 class="section-title">Скрипт приветствия</h2>
+
+    <div class="script-box">
+      <p>— Добрый день! Это <em>[Имя оператора]</em>, Вы интересовались покупкой квартиры в Москве, верно?</p>
+    </div>
+
+    <div class="rule-box tip">
+      <div class="rule-box-icon">🎯</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Зачем сразу упоминать Москву?</div>
+        <p>Спрашивая про Москву сразу — одновременно приветствуем и квалифицируем. Одним вопросом меньше дальше: проще и нам, и клиенту.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Если клиент ответил «Да»</h2>
+
+    <div class="text-block">
+      Клиент подтвердил интерес к покупке квартиры в Москве. 
+      ➡️ Сразу переходим к четырём квалификационным вопросам! Никаких лишних объяснений.
+    </div>
+
+    <div class="script-box">
+      <p>— Отлично! Подскажите, в каком районе рассматриваете?</p>
+    </div>
+
+    <h2 class="section-title">Если ответ не «Да» — алгоритм отработки</h2>
+
+    <div class="text-block">
+      Любой другой ответ — это ветка работы с возражениями в блоке «Приветствие». Независимо от ответа — всегда пробуем отработать <strong style="color:var(--accent)">хотя бы 2 раза</strong>, прежде чем прощаться.
+    </div>
+
+    <!-- Objection cards for greeting -->
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-card-trigger">🚫 «Нет / Не актуально»</div>
+        <div class="obj-card-body">
+          <strong>Шаг 1</strong> — показываем, что мы не роботы:
+          <div class="obj-card-response">— Вы отложили покупку?</div>
+          <strong style="display:block;margin-top:10px">Шаг 2</strong> — если снова «Нет»:
+          <div class="obj-card-response">— Если Вы ещё на этапе выбора, у нас есть корпоративные скидки. Иногда разница в несколько сотен тысяч на одну и ту же квартиру. Давайте проверим, можно ли по Вашим параметрам купить квартиру выгоднее? В каком районе рассматриваете?</div>
+          <strong style="display:block;margin-top:10px">Шаг 3</strong> — третий «Нет»:
+          <div class="obj-card-response">— Если покупка станет актуальной, то у нас есть акции, а также субсидии со ставкой от 5%. Задам буквально пару вопросов по Вашей ситуации, хорошо?</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-card-trigger">⏰ «Отложил покупку»</div>
+        <div class="obj-card-body">
+          <div class="obj-card-response">— А что повлияло на решение отложить?</div>
+          После ответа клиента:
+          <div class="obj-card-response">— Да, сейчас и правда мало вариантов при самостоятельном поиске. Поэтому у нас есть ипотечный специалист, помогаем с оформлением субсидии со ставкой от 5%. Задам буквально пару вопросов по Вашей ситуации, хорошо? В каком районе рассматриваете?</div>
+          Если клиент не хочет озвучивать причину:
+          <div class="obj-card-response">— Многие откладывают из-за отсутствия предложений под свой бюджет. Поэтому у нас есть корпоративные скидки и акции. Задам буквально пару вопросов по Вашей ситуации, хорошо? В каком районе рассматриваете?</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-card-trigger">🏙️ «Другой город»</div>
+        <div class="obj-card-body">
+          <div class="obj-card-response">— Понял(а) Вас, а в каком городе рассматриваете покупку?</div>
+          Если город в нашем списке:
+          <div class="obj-card-response">— Отлично, в этом городе у нас тоже есть много вариантов. Задам пару вопросов по Вашей ситуации, хорошо?</div>
+          Если города нет в списке (Казань, Екатеринбург и т.д.):
+          <div class="obj-card-response">— С этим городом пока не работаем. Могу предложить рассмотреть в Москве и Московской области как прибыльную инвестицию. По семейной ипотеке в Москве обычно доступен более высокий лимит. Рассмотрим такой вариант?</div>
+          Если не соглашается:
+          <div class="obj-card-response">— Понял(а) Вас. Если у нас появятся варианты в интересующем Вас городе, мы обязательно с Вами свяжемся. Всего доброго, до свидания!</div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-card-trigger">⏱️ «Некогда / Я на работе»</div>
+        <div class="obj-card-body">
+          <div class="obj-card-response">— Поняла Вас, тогда пройдёмся быстренько по самому основному за минуту-две. В каком районе рассматриваете?</div>
+          Если всё равно некогда:
+          <div class="obj-card-response">— Понял(а) Вас, когда перезвонить, лучше сегодня вечером или завтра утром?</div>
+          После ответа:
+          <div class="obj-card-response">— Отлично, тогда наш специалист свяжется с Вами в это время. Подскажите, какую квартиру ищите: одну, двух, трёхкомнатную или студию?</div>
+          <div class="rule-box tip" style="margin-top:10px">
+            <div class="rule-box-icon">💡</div>
+            <div class="rule-box-content">
+              <div class="rule-box-title">Лайфхак</div>
+              <p>Клиент уже назвал время перезвона, расслабился — и тут ты его аккуратно затягиваешь в диалог!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-card-trigger">🏠 «Я уже купил квартиру»</div>
+        <div class="obj-card-body">
+          <div class="rule-box info" style="margin-bottom:10px">
+            <div class="rule-box-icon">⚠️</div>
+            <div class="rule-box-content">
+              <div class="rule-box-title">Важный факт</div>
+              <p>В ~80% случаев это НЕПРАВДА. Клиент выработал защитную реакцию.</p>
+            </div>
+          </div>
+          <strong>Шаг 1</strong> — поздравляем:
+          <div class="obj-card-response">— Поздравляю! Рассматриваете покупку ещё одной квартиры, сейчас у застройщиков период выгодных цен, подберем выгодную акцию, что скажете?</div>
+          <strong style="display:block;margin-top:8px">Шаг 2</strong> — если настаивает:
+          <div class="obj-card-response">— Тогда зафиксирую, чтобы Вас не беспокоили. Для этого подскажите в каком ЖК приобрели?</div>
+          Если не называет ЖК — значит, скорее всего, соврал:
+          <div class="obj-card-response">— Если Вы на этапе выбора, у нас есть корпоративные скидки. Иногда разница в несколько сотен тысяч на ту же квартиру. Давайте проверим, можно ли купить выгоднее?</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Откуда у нас номер клиента?</h2>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m2-1" class="acc-toggle">
+        <label class="accordion-label" for="acc-m2-1">
+          ❓ Клиент спрашивает «откуда у вас мой номер?»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Первый ответ:
+            <div class="inline-quote">— Контакт передали коллеги из маркетинга. Вы оставили запрос или реакцию на одной из наших площадок. Подскажите, покупка квартиры актуальна?</div>
+            Если настаивает:
+            <div class="inline-quote">— Иногда заявку оставляет кто-то из близких. Или другой клиент записал номер с ошибкой. Мы помогаем с оформлением субсидий, ставки начинаются от 5%. Задам пару вопросов по вашей ситуации?</div>
+            <div class="text-block" style="margin-top:12px;font-size:13px">
+              Почему мы не знаем точно? Наша компания присутствует на огромном количестве площадок: ВКонтакте, соцсети, сайты-агрегаторы, лендинги. Отследить откуда пришёл тот или иной контакт технически невозможно.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Запреты блока приветствия</h2>
+
+    <div class="cards-grid">
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрещено озвучивать «SunLife»</div>
+          <p>Никогда не произносим название компании, мы бережем нашу репутацию. Если клиент уточняет, кто мы или как называется компания, отвечаем только в формате "Центр по подбору новостроек" и никак иначе, как бы клиент не упрашивал!</p>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрещено обещать подборки</div>
+          <p>Мы ничего не отправляем клиентам: никаких подборок, писем на Email, ни сообщений на WhatsApp, ни SMS.</p> 
+          <p>Строго доносим до клиента, что специалист с ним именно созвонится</p>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрещено консультировать</div>
+          <p>По ценам, стоимости квартир, размеру первоначального взноса, условия по ипотеке, по любым суммам — это не наша задача.</p> 
+          <p>Даже если вдруг знаешь такую информацию (к примеру, раньше работал в схожей сфере) — все равно запрещана любая консультация. Условия постоянно меняются, плюс мы ориентируемся на то, с чем работает именно наша компания. Поэтому вся актуальная информация только у нашего специалиста и на любой нестандартный вопрос доносим клиенту, что специалист ему все расскажет</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m2-2" class="acc-toggle">
+        <label class="accordion-label" for="acc-m2-2">
+          💬 Клиент просит отправить подборку
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Давайте так: специалист созвонится с Вами и по Вашей ситуации решит, как лучше поступить, сориентирует по всем актуальным вариантам, хорошо?</div>
+            Если клиент всё равно настаивает:
+            <div class="inline-quote">— Со специалистом вы увидите именно то, что подходит вам, и сможете сразу скорректировать свои требования. У меня буквально несколько вопросов… Вот в каком районе вы рассматриваете покупку?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- QUIZ M2 -->
+    <div class="quiz-section">
+      <div class="quiz-header">
+        <div class="quiz-title">🧠 Проверь себя — Модуль 2</div>
+        <div class="quiz-subtitle">Ответь правильно на все вопросы для получения бейджа</div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 1 из 5</div>
+        <div class="q-text">Какое правильное приветствие при звонке клиенту?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q1" id="m2q1a"><label for="m2q1a"><span class="opt-letter">A</span> Алло! Вы искали квартиру?</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m2q1" id="m2q1b"><label for="m2q1b"><span class="opt-letter">B</span> Добрый день! Меня зовут [Имя]. Вы ранее интересовались покупкой квартиры в Москве, верно?</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q1" id="m2q1c"><label for="m2q1c"><span class="opt-letter">C</span> Здравствуйте! Я из Санлайф, хочу предложить квартиру.</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q1" id="m2q1d"><label for="m2q1d"><span class="opt-letter">D</span> Добрый день! Удобно сейчас говорить?</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m2q1-ok" style="display:none">✅ Правильно! Приветствие уже включает первый квалификационный вопрос про Москву.</div>
+        <div class="qfb qfb-err" id="m2q1-err" style="display:none">❌ Неверно. Правильный ответ: B — приветствие уже включает первый квалификационный вопрос про Москву.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 2 из 5</div>
+        <div class="q-text">Клиент сказал «Да, интересовался». Что делаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q2" id="m2q2a"><label for="m2q2a"><span class="opt-letter">A</span> Подробно рассказываем о компании</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q2" id="m2q2b"><label for="m2q2b"><span class="opt-letter">B</span> Спрашиваем, откуда узнал о нас</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m2q2" id="m2q2c"><label for="m2q2c"><span class="opt-letter">C</span> Немедленно переходим к четырём квалификационным вопросам</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q2" id="m2q2d"><label for="m2q2d"><span class="opt-letter">D</span> Уточняем email для подборки</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m2q2-ok" style="display:none">✅ Правильно! Если клиент подтвердил интерес — сразу в квалификацию!</div>
+        <div class="qfb qfb-err" id="m2q2-err" style="display:none">❌ Неверно. Правильный ответ: C — сразу переходим к четырём квалификационным вопросам.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 3 из 5</div>
+        <div class="q-text">Клиент говорит «Некогда, я на работе». Что делаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q3" id="m2q3a"><label for="m2q3a"><span class="opt-letter">A</span> Сразу прощаемся</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m2q3" id="m2q3b"><label for="m2q3b"><span class="opt-letter">B</span> Договариваемся на перезвон и сразу задаём вопрос квалификации</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q3" id="m2q3c"><label for="m2q3c"><span class="opt-letter">C</span> Отправляем подборку в WhatsApp</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q3" id="m2q3d"><label for="m2q3d"><span class="opt-letter">D</span> Перезваниваем через 2 часа сами</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m2q3-ok" style="display:none">✅ Правильно! Соглашаемся на перезвон, но сразу задаём вопрос. Клиент часто отвечает по инерции.</div>
+        <div class="qfb qfb-err" id="m2q3-err" style="display:none">❌ Неверно. Правильный ответ: B — договариваемся о перезвоне, но сразу задаём вопрос квалификации.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 4 из 5</div>
+        <div class="q-text">Почему в приветствии упоминается именно Москва?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q4" id="m2q4a"><label for="m2q4a"><span class="opt-letter">A</span> Клиент написал «Москва» в заявке</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m2q4" id="m2q4b"><label for="m2q4b"><span class="opt-letter">B</span> Москва — основное направление с наибольшим ассортиментом, это первый вопрос квалификации</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q4" id="m2q4c"><label for="m2q4c"><span class="opt-letter">C</span> Мы работаем только с Москвой</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q4" id="m2q4d"><label for="m2q4d"><span class="opt-letter">D</span> Требование закона</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m2q4-ok" style="display:none">✅ Правильно! Москва — наш ориентир. Упоминание в приветствии — это первый квалифицирующий вопрос.</div>
+        <div class="qfb qfb-err" id="m2q4-err" style="display:none">❌ Неверно. Правильный ответ: B — Москва основное направление и это первый квалифицирующий вопрос.</div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 5 из 5</div>
+        <div class="q-text">Клиент говорит «Уже купил квартиру». Что делаем в первую очередь?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q5" id="m2q5a"><label for="m2q5a"><span class="opt-letter">A</span> Поздравляем и прощаемся</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m2q5" id="m2q5b"><label for="m2q5b"><span class="opt-letter">B</span> Поздравляем и уточняем, планирует ли клиент ещё одну покупку</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q5" id="m2q5c"><label for="m2q5c"><span class="opt-letter">C</span> Спрашиваем, не хочет ли продать</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m2q5" id="m2q5d"><label for="m2q5d"><span class="opt-letter">D</span> Записываем как «купил» и закрываем</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m2q5-ok" style="display:none">✅ Правильно! 80% говорящих «уже купил» — врут. Поздравляем и предлагаем ещё одну квартиру.</div>
+        <div class="qfb qfb-err" id="m2q5-err" style="display:none">❌ Неверно. Правильный ответ: B — поздравляем и предлагаем рассмотреть ещё одну покупку.</div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:24px">
+        <strong>⚠️ Напоминание:</strong> Для перехода к следующему модулю убедись, что все ответы правильные.
+      </div>
+
+      <div class="module-complete" style="margin-top:28px">
+        <div class="mc-check">📚</div>
+        <div class="mc-title">Модуль 2 пройден!</div>
+        <div class="mc-subtitle">Ты получаешь бейдж <strong style="color:var(--accent)">📚 «Прилежный ученик»</strong></div>
+      </div>
+
+      <div class="badge-earned">
+        <div class="badge-icon">📚</div>
+        <div class="badge-info">
+          <div class="badge-label">Получен бейдж</div>
+          <div class="badge-name">Прилежный ученик</div>
+          <div class="badge-desc">Пройден Модуль 2 — «Приветствие и начало диалога»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-btn-wrapper">
+      <div class="nav-btn secondary"><label for="nav-m1">← Назад</label></div>
+      <div class="nav-btn primary"><label for="nav-m3">Модуль 3: Возражения →</label></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ================================================================
+     MODULE 3: РАБОТА С ВОЗРАЖЕНИЯМИ
+================================================================ -->
+<div class="module-page module-3 mod3">
+  <div class="module-header">
+    <label class="back-btn" for="nav-m2">← Модуль 2</label>
+    <div class="module-header-icon">🛡️</div>
+    <div class="module-header-info">
+      <div class="module-num">Модуль 3 из 5</div>
+      <div class="module-name">Работа с возражениями</div>
+    </div>
+  </div>
+
+  <div class="module-content">
+
+    <div class="highlight-box">
+      <strong>⚖️ Главный принцип:</strong> Каждое возражение отрабатываем МИНИМУМ 2 раза. На третий — вежливо прощаемся.<br>
+      После каждой отработки — сразу задаём вопрос из проведения опроса: «В каком районе рассматриваете?». Это втягивает клиента в диалог.<br>
+      <strong>🎯 Цель</strong> — не переспорить клиента, а быстро втянуть в диалог. Мягко, но настойчиво.
+    </div>
+
+    <!-- Structure -->
+    <div class="step-chain" style="margin:24px 0">
+      <div class="step-item">
+        <div class="step-num" style="font-size:11px">❌</div>
+        <div class="step-content">Возражение клиента</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">Отработка 1 + вопрос из скрипта</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="font-size:11px">❌</div>
+        <div class="step-content">Снова возражение</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">Отработка 2 + вопрос из скрипта</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="font-size:11px">❌</div>
+        <div class="step-content">Снова возражение</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="background:rgba(231,76,60,0.15);border-color:var(--red2);color:var(--red2)">🚪</div>
+        <div class="step-content" style="color:var(--red2)">"Всего доброго, до свидания!"</div>
+      </div>
+    </div>
+
+<h2 class="section-title">Возражения по типу недвижимости и важные нюансы</h2>
+
+<div class="accordion">
+  <div class="accordion-item">
+    <input type="checkbox" id="acc-m3-1" class="acc-toggle">
+    <label class="accordion-label" for="acc-m3-1">
+      🏡 «Хочу дом / участок / коммерцию»
+      <span class="acc-arrow">▼</span>
+    </label>
+    <div class="accordion-body">
+      <div class="accordion-body-inner">
+        <div class="rule-box forbidden" style="margin-bottom:12px">
+          <div class="rule-box-icon">ℹ️</div>
+          <div class="rule-box-content">
+            <div class="rule-box-title">Важно знать</div>
+            <p>С домами и участками, а так же с коммерческой недвижимостью (офисы, кладовки и подобное) — мы не работаем. Только квартиры и апартаменты.</p>
+          </div>
+        </div>
+        Пытаемся аккуратно перенаправить на первичку:
+        <div class="inline-quote">— Сейчас у нас нет таких предложений, может рассмотрите покупку квартиры в новостройке, у застройщиков есть субсидированные программы со ставкой всего лишь от 5%, а еще можно оформить семейную ипотеку. Так же через нас доступны корпоративные скидки и акции. Задам буквально пару вопросов по Вашей ситуации, хорошо?</div>
+        Если клиент настаивает — только дом, участок или коммерция:
+        <div class="inline-quote">— Понял Вас. Если у нас появятся варианты под Ваш запрос, мы обязательно с Вами свяжемся. Всего доброго, до свидания!</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="accordion-item">
+    <input type="checkbox" id="acc-m3-2" class="acc-toggle">
+    <label class="accordion-label" for="acc-m3-2">
+      ‼️«Клиент прошел процедуру Банкротства (и планирует покупку в ипотеку)»
+      <span class="acc-arrow">▼</span>
+    </label>
+    <div class="accordion-body">
+      <div class="accordion-body-inner">
+        <div class="rule-box forbidden" style="margin-bottom:12px">
+          <div class="rule-box-icon">ℹ️</div>
+          <div class="rule-box-content">
+            <div class="rule-box-title">Важно</div>
+            <p>Если клиент планирует покупать в ипотеку и упоминает, что прошел процедуру банкротства, нужно уточнить дополнительно несколько нюансов.</p>
+          </div>
+        </div>
+        
+        <div class="inline-quote">— Подскажите, пожалуйста, сколько лет прошло с момента прохождения процедуры?</div>
+        
+        <p><strong style="color: green;">Если прошло более 5 лет с момента прохождения процедуры:</strong></p>
+        <div class="inline-quote">— Отлично, в таком случае Вы можете податься на ипотеку. Я зафиксировала информацию и специалист проконсультирует о всех нюансах подробнее.</div>
+        
+        <p><strong style="color: red;">Если прошло менее 5 лет с момента прохождения процедуры:</strong></p>
+        <div class="inline-quote">— К сожалению, податься на ипотеку не получится. Если у Вас есть первоначальный взнос, можно попробовать оформить субсидированную ипотеку от застройщика на имя супруг_а(и) или на любого родственника (сестра, брат, родители).</div>
+        
+        <div class="rule-box tip" style="margin-top:12px">
+          <div class="rule-box-icon">💡</div>
+          <div class="rule-box-content">
+            <div class="rule-box-title">Важно знать</div>
+            <p>Если есть первоначальный взнос и готовы оформить ипотеку на другого человека (родственника, супруга): продолжаем далее по скрипту</p>
+           <p>Если нет первоначального взноса или не на кого оформить ипотеку: прощаемся, это не качественный лид.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+    <h2 class="section-title">Специальные возражения</h2>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m3-4" class="acc-toggle">
+        <label class="accordion-label" for="acc-m3-4">
+          ❓ «Не интересовался / Где я интересовался / Не давал разрешения»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <strong>Если клиент говорит, что не интересовался:</strong>
+            <div class="inline-quote">— Поняла, видимо Вы обращались не лично. Иногда заявку оставляет кто-то из близких или другой клиент записал номер с ошибкой. Мы помогаем с подбором выгодных квартир, через нас доступны корпоративные акции и скидки от застройщиков. Задам пару вопросов по Вашей ситуации, хорошо?</div>
+            <strong>Если настаивает:</strong>
+            <div class="inline-quote">— Да, такое иногда случается и раз запроса лично от Вас не было, я сейчас уберу Вам номер из системы. Если вдруг покупка квартиры станет актуальной: у нас есть закрытые лоты с уникальными квартирами и мы помогаем с оформлением субсидированной ипотеки от 5%. Кстати говоря, а Вы в целом слышали о субсидиях?</div>
+            <strong>Если уточняет где/когда интересовался:</strong>
+            <div class="inline-quote">— Контакт нам передали коллеги из маркетингового отдела. Вы оставили запрос или реакцию на одной из наших площадок, подробности у нас не отображаются. Если покупка для Вас всё ещё актуальна, у нас как раз есть закрытые лоты, акции, помогаем с оформлением субсидированной ипотеки от 5%. Кстати говоря, а Вы в целом слышали о субсидиях?</div>
+            <strong>Если говорит, что не давал разрешения на звонки:</strong>
+            <div class="inline-quote">— Видимо, произошла какая-то ошибка. Так случается, если покупкой интересовался кто-то из Ваших близких, к примеру. Наша задача просто сориентировать Вас по актуальным ценам и условиям на недвижимость, подобрать действующие акции и скидки. Задам несколько вопросов по Вашей ситуации, хорошо?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m3-5" class="acc-toggle">
+        <label class="accordion-label" for="acc-m3-5">
+          🏗️ «Не работаю с посредниками / только напрямую с застройщиком»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Первая попытка:
+            <div class="inline-quote">— Мы и есть официальные представители застройщиков. У нас есть вся актуальная информация по условиям, акциям и также мы знаем разные инструменты, которые помогают сделать покупку более выгодной. Задам несколько вопросов по Вашей ситуации, хорошо?</div>
+            Если снова отказывается:
+            <div class="inline-quote">— Застройщики сегодня предлагают хорошие условия: беспроцентную рассрочку, субсидированные ставки от 5%. А мы помогаем с оформлением самого выгодного для Вас варианта. Вы уже определились с районом?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m3-6" class="acc-toggle">
+        <label class="accordion-label" for="acc-m3-6">
+          🏘️ «У меня уже есть свой агент / брокер»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Первая попытка:
+            <div class="inline-quote">— Отлично, что Вы так ответственно подошли к делу. Так как рынок большой, многие смотрят условия у разных источников, чтобы понимать общую картину. Мы официальный партнёр застройщиков, поэтому у нас широкий выбор под любой бюджет. Задам пару вопросов по Вашей ситуации, хорошо?</div>
+            Если настаивает:
+            <div class="inline-quote">— У нас есть корпоративные скидки и иногда разница в несколько сотен тысяч на одну и ту же квартиру. Так же помогаем с оформлением субсидированной ипотеки со ставкой от 5%. Давайте проверим, что есть под Ваш запрос?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m3-7" class="acc-toggle">
+        <label class="accordion-label" for="acc-m3-7">
+          🏠 «Мне нужно сначала продать свою квартиру»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Отлично, мы и с этим можем помочь. У многих застройщиков есть программа трейд-ин. Задам буквально пару вопросов по Вашей ситуации, хорошо?</div>
+            (Вопросы задаём по покупке квартиры, а не по продаже — продажей займётся специалист)
+            Если клиент спрашивает, что такое трейд-ин:
+            <div class="inline-quote">— Программа трейд-ин, это обмен квартиры. У каждого застройщика свои предложения. Я сделаю отметку для специалиста, он Вас подробно проконсультирует по этому вопросу. В какой районе рассматриваете покупку?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m3-8" class="acc-toggle">
+        <label class="accordion-label" for="acc-m3-8">
+          🔍 «Сам найду / Не нужна помощь»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Первая попытка:
+            <div class="inline-quote">— Конечно, каждый хочет минимизировать затраты при покупке. При этом рынок недвижимости огромен и без помощи специалиста, который знает все нюансы, не обойтись. Только у него есть доступы к закрытым лотам и информация по актуальным акциям. Задам пару вопросов по Вашей ситуации, хорошо?</div>
+            Вторая попытка:
+            <div class="inline-quote">— У нас есть корпоративные скидки и иногда разница в несколько сотен тысяч на одну и ту же квартиру. Так же помогаем с оформлением субсидированной ипотеки со ставкой от 5%. Давайте проверим, что есть под Ваш запрос?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m3-9" class="acc-toggle">
+        <label class="accordion-label" for="acc-m3-9">
+          📋 «С какими застройщиками работаете?»
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Сначала — общий ответ:
+            <div class="inline-quote">— Работаем с крупнейшими застройщиками, а Вас какой-то конкретный интересует?</div>
+            Если клиент настаивает на полном списке:
+            <div class="inline-quote">— Мы являемся официальным партнёром застройщиков: ФСК, MR Group, Брусника, Stone, Родина, Эталон и многих других. Подскажите, в какой районе рассматриваете покупку?</div>
+            <div class="rule-box tip">
+              <div class="rule-box-icon">⚠️</div>
+              <div class="rule-box-content">
+                <div class="rule-box-title">Важно</div>
+                <p>Больше ничего по застройщикам не добавляем. Любые детали — к специалисту.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Специальные ситуации</h2>
+
+    <div class="cards-grid">
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🏢</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Попали на компанию</div>
+          <p>«ПАО Сбербанк / Вам ответит первый свободный оператор...»</p>
+          <div class="inline-quote" style="margin-top:8px">— Видимо, произошла какая-то ошибка. До свидания!</div>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">👔</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Клиент — брокер / агент / застройщик</div>
+          <p>Сразу прощаемся. Не ведём в диалог, не передаём лид.</p>
+          <div class="inline-quote" style="margin-top:8px">— Поняла вас, всего доброго. До свидания!</div>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🔍</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">«Смотрю квартиру для своего клиента»</div>
+          <p>Сразу прощаемся. Такой лид не передаём.</p>
+        </div>
+      </div>
+      <div class="rule-box info">
+        <div class="rule-box-icon">🤬</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Клиент оскорбляет / матерится</div>
+          <p>Если оскорбляет лично тебя или компанию — молча завершаем звонок. Если просто матерится в фоне (едет за рулём) — спокойно продолжаем диалог.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-box tip">
+      <div class="rule-box-icon">💡</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Нестандартные вопросы клиента</div>
+        <p>Если клиент задаёт вопрос, ответа на который нет в скрипте:</p>
+        <div class="inline-quote" style="margin-top:8px">— Дело в том, что у меня только первичная информация. По всем деталям - ипотеке, скидкам, планировкам, этажности и подобному консультирует непосредственно специалист, так как именно он занимается подборкой. Я отметил, что для Вас этот вопрос важен и когда он свяжется с Вами, то в первую очередь ответит именно на него.</div>
+        <p style="margin-top:8px">Даже если ты ЗНАЕШЬ ответ — всё равно не консультируй. Это запрещено. Всё — через специалиста.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- QUIZ M3 -->
+    <div class="quiz-section">
+      <div class="quiz-header">
+        <div class="quiz-title">🧠 Проверь себя — Модуль 3</div>
+        <div class="quiz-subtitle">Проверь знания по работе с возражениями</div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 1 из 4</div>
+        <div class="q-text">Сколько раз минимум отрабатывается одно возражение?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q1" id="m3q1a"><label for="m3q1a"><span class="opt-letter">A</span> Один раз</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m3q1" id="m3q1b"><label for="m3q1b"><span class="opt-letter">B</span> Два раза</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q1" id="m3q1c"><label for="m3q1c"><span class="opt-letter">C</span> Три раза</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q1" id="m3q1d"><label for="m3q1d"><span class="opt-letter">D</span> Пока клиент не согласится</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m3q1-ok" style="display:none">✅ Правильно! Минимум 2 раза. На третий — вежливо прощаемся.</div>
+        <div class="qfb qfb-err" id="m3q1-err" style="display:none">❌ Неверно. Правильный ответ: B — минимум 2 раза. На третий — вежливо прощаемся.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 2 из 4</div>
+        <div class="q-text">Клиент говорит «Я сам брокер, смотрю для клиента». Что делаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q2" id="m3q2a"><label for="m3q2a"><span class="opt-letter">A</span> Передаём информацию для его клиента</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q2" id="m3q2b"><label for="m3q2b"><span class="opt-letter">B</span> Предлагаем партнёрство</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m3q2" id="m3q2c"><label for="m3q2c"><span class="opt-letter">C</span> Сразу прощаемся — таких лиды не передаём</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q2" id="m3q2d"><label for="m3q2d"><span class="opt-letter">D</span> Квалифицируем как обычного клиента</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m3q2-ok" style="display:none">✅ Правильно! Брокеры и агенты — сразу прощаемся. Такие лиды не передаём.</div>
+        <div class="qfb qfb-err" id="m3q2-err" style="display:none">❌ Неверно. Правильный ответ: C — брокеры и агенты — сразу прощаемся, такие лиды не передаём.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 3 из 4</div>
+        <div class="q-text">Клиент хочет вторичку. Какой размер комиссии называем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q3" id="m3q3a"><label for="m3q3a"><span class="opt-letter">A</span> Называем: 3–5%</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q3" id="m3q3b"><label for="m3q3b"><span class="opt-letter">B</span> Называем: от 2%</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q3" id="m3q3c"><label for="m3q3c"><span class="opt-letter">C</span> Называем примерный диапазон</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m3q3" id="m3q3d"><label for="m3q3d"><span class="opt-letter">D</span> Никогда не консультируем по размеру комиссии — это расскажет специалист</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m3q3-ok" style="display:none">✅ Правильно! Размер комиссии по вторичке не называем никогда. Актуальная информация только у специалиста.</div>
+        <div class="qfb qfb-err" id="m3q3-err" style="display:none">❌ Неверно. Правильный ответ: D — размер комиссии не называем никогда.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 4 из 4</div>
+        <div class="q-text">Клиент хочет купить участок и отказывается от квартиры. Что делаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q4" id="m3q4a"><label for="m3q4a"><span class="opt-letter">A</span> Продолжаем убеждать</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q4" id="m3q4b"><label for="m3q4b"><span class="opt-letter">B</span> Обещаем найти участок</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m3q4" id="m3q4c"><label for="m3q4c"><span class="opt-letter">C</span> После одной попытки перенаправить — прощаемся</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m3q4" id="m3q4d"><label for="m3q4d"><span class="opt-letter">D</span> Переключаем на другой отдел</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m3q4-ok" style="display:none">✅ Правильно! Один раз мягко предлагаем альтернативу. Если отказывается — прощаемся без давления.</div>
+        <div class="qfb qfb-err" id="m3q4-err" style="display:none">❌ Неверно. Правильный ответ: C — после одной попытки перенаправить прощаемся.</div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:24px">
+        <strong>⚠️ Напоминание:</strong> Убедись, что все ответы верны перед переходом к Модулю 4.
+      </div>
+
+      <div class="module-complete" style="margin-top:28px">
+        <div class="mc-check">🛡️</div>
+        <div class="mc-title">Модуль 3 пройден!</div>
+        <div class="mc-subtitle">Ты получаешь бейдж <strong style="color:var(--accent)">🛡️ «Мастер диалога»</strong></div>
+      </div>
+
+      <div class="badge-earned">
+        <div class="badge-icon">🛡️</div>
+        <div class="badge-info">
+          <div class="badge-label">Получен бейдж</div>
+          <div class="badge-name">Мастер диалога</div>
+          <div class="badge-desc">Пройден Модуль 3 — «Работа с возражениями»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-btn-wrapper">
+      <div class="nav-btn secondary"><label for="nav-m2">← Назад</label></div>
+      <div class="nav-btn primary"><label for="nav-m4">Модуль 4: Квалификация →</label></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ================================================================
+     MODULE 4: ПРОВЕДЕНИЕ ОПРОСА
+================================================================ -->
+<div class="module-page module-4 mod4">
+  <div class="module-header">
+    <label class="back-btn" for="nav-m3">← Модуль 3</label>
+    <div class="module-header-icon">❓</div>
+    <div class="module-header-info">
+      <div class="module-num">Модуль 4 из 5</div>
+      <div class="module-name">Проведение опроса</div>
+    </div>
+  </div>
+
+  <div class="module-content">
+
+    <div class="section-intro">
+      <p>После того как клиент готов говорить — начинаем квалификацию. В зависимости от типа недвижимости, которое нужно клиенту, мы задаем разное количество вопросов.</p> 
+      <p>Если клиент хочет первичку (покупка в новостройке): нужно собрать 4 параметра, чтобы брокер мог сразу начать подбор.</p> 
+     <p>Если клиенту нужна вторичка: в первую очередь пытаемся ему донести, что выгоднее покупать квартиру в новостройках. Если клиент настаивает на вторичке: доносим информацию, что будет коммиссия и задаем 2 вопроса по параметрам.</p>
+    </div>
+
+    <!-- 4 Questions as interactive cards -->
+    <!-- ОПРОС ПО ПЕРВИЧКЕ -->
+<h2 class="section-title">ОПРОС ПО ПЕРВИЧКЕ (НОВОСТРОЙКА)</h2>
+
+<div class="rule-box info" style="margin-bottom:20px">
+  <div class="rule-box-icon">ℹ️</div>
+  <div class="rule-box-content">
+    <div class="rule-box-title">Стратегия работы с первичкой</div>
+    <p>Это основное направление компании, так как мы сотрудничаем с застройщиками напрямую. Поэтому независимо от того, какой тип недвимижимости нужен клиенту: в первую очередь мы всегда предалагаем первичку.</p>
+  </div>
+</div>
+
+    <h2 class="section-title">Вопрос 1 — Район</h2>
+
+    <div class="script-box">
+      <p>— В каком районе рассматриваете?</p>
+    </div>
+
+  <div class="rule-box tip">
+  <div class="rule-box-icon">🗺️</div>
+  <div class="rule-box-content">
+    <div class="rule-box-title">Что фиксируем</div>
+    <p>Фиксируем любой ответ: конкретный район, поближе к работе, без разницы, пока не определились — всё подходит.</p>
+    <p>Сразу переходим к следующему вопросу. Не обсуждаем варианты районов — это работа специалиста, которому мы передаем лид дальше в работу. Наша цель, как оператора — получить информацию.</p>
+    <p>Если клиент не ответит на данный вопрос — не страшно. Главное, что мы уточнили.</p>
+  </div>
+</div>
+
+    <h2 class="section-title">Вопрос 2 — Тип квартиры</h2>
+
+    <div class="script-box">
+      <p>— Какую квартиру ищите: одну, двух, трёхкомнатную или студию?</p>
+    </div>
+
+    <div class="rule-box tip">
+      <div class="rule-box-icon">🏠</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Что фиксируем</div>
+        <p>Клиент может назвать квадратуру (не более 50 кв м или любой другой вариант), количество комнат или сказать, что ещё не определился.</p> 
+        <p>Записываем любой ответ клиента. Если он ещё не определился — на ответе не настаиваем.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Вопрос 3 — Бюджет ⚠️</h2>
+
+    <div class="script-box">
+      <p>— Правильно понимаю, Вы хотите <em>[количество комнат]</em> в <em>[район]</em>? Ориентировочно на какую стоимость рассчитываете?</p>
+    </div>
+
+    <div class="rule-box forbidden">
+      <div class="rule-box-icon">🚫</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">ЗАПРЕЩЕНО</div>
+        <p>Называть цены, говорить примерные расценки, подтверждать или отрицать бюджет клиента. Ты спрашиваешь бюджет — но сам первым никаких сумм не называешь и не комментируешь!</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m4-1" class="acc-toggle">
+        <label class="accordion-label" for="acc-m4-1">
+          💬 Если клиент спрашивает «Смогу ли я в 7 млн уложиться?» (или любой другой подобный вопрос, уточняет стоимость квартир)
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Стоимость зависит от множества различных факторов. Поэтому и уточняю, на какой бюджет Вы рассчитываете? / Дороже какой суммы не предлагать?</div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m4-2" class="acc-toggle">
+        <label class="accordion-label" for="acc-m4-2">
+          💬 Если клиент настаивает, что без ориентиров не может назвать бюджет
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Информация по актуальным ценам у нашего специалиста, я зафиксировала, что для Вас этот вопрос важен и он проконсультирует Вас об этом подробнее.</div>
+            И сразу переходишь к следующему вопросу квалификации. Больше не настаиваем на том, чтобы клиент озвучил бюджет!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">📊 Шпаргалка по бюджету</h2>
+
+    <div class="rule-box info">
+      <div class="rule-box-icon">⚠️</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">КРИТИЧЕСКИ ВАЖНО</div>
+        <p>Цены клиенту не называть! Шпаргалка используется только для оценки адекватности бюджета клиента. Только если клиент САМ озвучил конкретную сумму — сравниваем с таблицей.</p>
+      </div>
+    </div>
+
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th>Локация</th>
+          <th>Тип недвижимости</th>
+          <th>Минимальная цена</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Подмосковье</td><td>Студия</td><td>от 7 млн</td></tr>
+        <tr><td>Подмосковье</td><td>1-комнатная</td><td>от 9 млн</td></tr>
+        <tr><td>Подмосковье</td><td>2-комнатная</td><td>от 12 млн</td></tr>
+        <tr><td>Новая Москва</td><td>Студия</td><td>от 8 млн</td></tr>
+        <tr><td>Новая Москва</td><td>1-комнатная</td><td>от 12 млн</td></tr>
+        <tr><td>Новая Москва</td><td>2-комнатная</td><td>от 16 млн</td></tr>
+        <tr><td>Москва</td><td>Студия</td><td>от 10 млн ₽</td></tr>
+        <tr><td>Москва</td><td>1-комнатная</td><td>от 15 млн ₽</td></tr>
+        <tr><td>Москва</td><td>Евро 2-комнатная</td><td>от 17 млн ₽</td></tr>
+        <tr><td>Москва</td><td>2-комнатная</td><td>от 22 млн ₽</td></tr>
+        <tr><td>От ТТК до МКАД</td><td>Студия</td><td>от 14 млн ₽</td></tr>
+        <tr><td>От ТТК до МКАД</td><td>1-комнатная</td><td>от 19 млн ₽</td></tr>
+        <tr><td>От Садового до ТТК</td><td>Студия</td><td>от 20 млн ₽</td></tr>
+        <tr><td>От Садового до ТТК</td><td>2-комнатная</td><td>от 48 млн ₽</td></tr>
+        <tr><td>Внутри Садового кольца</td><td>1-комнатная</td><td>от 96 млн ₽</td></tr>
+        <tr><td>Внутри Садового кольца</td><td>Апартаменты</td><td>от 64 млн ₽</td></tr>
+      </tbody>
+    </table>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m4-3" class="acc-toggle">
+        <label class="accordion-label" for="acc-m4-3">
+          💬 Если бюджет клиента меньше минимального
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Сначала уточняем:
+            <div class="inline-quote">— Возможно Вы имеете ввиду, что это сумма первоначального взноса?</div>
+            Только если клиент подтверждает, что это весь бюджет (не первоначальный взнос):
+            <div class="inline-quote">— В необходимой Вам локации на данный момент нет предложений под Ваш бюджет. Готовы рассмотреть варианты, если предложим с бюджетом от <em>[минимальная сумма локации]</em>?</div>
+            Если не готов — прощаемся. Если согласен — переходим к следующему вопросу.
+            <div class="rule-box tip" style="margin-top:10px">
+              <div class="rule-box-icon">💡</div>
+              <div class="rule-box-content">
+                <div class="rule-box-title">Лайфхак</div>
+                <p>Перезвоните этому клиенту через месяц. К тому времени он посмотрит больше вариантов и поймёт, что его запросы были нереалистичны — и будет более открыт к диалогу.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Вопрос 4 — Способ оплаты</h2>
+
+    <div class="script-box">
+      <p>— Какой способ оплаты Вам подходит: ипотека, рассрочка или собственные средства?</p>
+    </div>
+
+    <!-- Decision tree for payment -->
+    <div class="step-chain">
+      <div class="step-item">
+        <div class="step-num" style="font-size:11px">💳</div>
+        <div class="step-content">
+          <strong>Собственные средства или рассрочка</strong><br>
+          Фиксируем и переходим к завершению диалога.
+        </div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <div class="step-num" style="font-size:11px">🏦</div>
+        <div class="step-content">
+          <strong>Ипотека</strong> — уточняем:<br>
+          <div class="inline-quote" style="margin-top:8px">— Поняла Вас. Давайте проверим, подходит ли Вам семейная ипотека. У Вас есть дети до 7 лет?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m4-4" class="acc-toggle">
+        <label class="accordion-label" for="acc-m4-4">
+          👶 Есть дети до 7 лет → семейная ипотека → покупка в Москве
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="rule-box info">
+              <div class="rule-box-icon">⚠️</div>
+              <div class="rule-box-content">
+                <div class="rule-box-title">Важно</div>
+                <p>В Москве без первоначального взноса купить квартиру даже через семейную ипотеку не получится. Ежемесячный платёж будет от 300–400 тысяч!</p>
+              </div>
+            </div>
+            Обязательно уточняем наличие первоначального взноса. Если нет ПВ:
+            <div class="inline-quote">— На данный момент нет подходящих вариантов под Ваши условия в Москве. Готовы рассмотреть тогда варианты в Новой Москве или Подмосковье? Там больше возможностей, когда дело касается семейной ипотеки, что скажите?</div>
+            Если соглашается — переходим к завершению. Если отказывается — прощаемся.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m4-5" class="acc-toggle">
+        <label class="accordion-label" for="acc-m4-5">
+          👶 Есть дети до 7 лет → семейная ипотека → Новая Москва или Подмосковье
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Дополнительных вопросов не нужно. Можно сразу переходить к завершению диалога.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m4-6" class="acc-toggle">
+        <label class="accordion-label" for="acc-m4-6">
+          👨‍👩‍👧 Нет детей или старше 7 лет → субсидированная ипотека
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Тогда предлагаю рассмотреть субсидированную ипотеку от застройщиков. Ставки начинаются всего лишь от 5%. Для этого подскажите, пожалуйста, есть ли у Вас первоначальный взнос?</div>
+            В данном случае обязательно наличие первоначального взноса. Если у клиента его нет — диалог не продолжаем.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-box forbidden">
+      <div class="rule-box-icon">🚫</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">ВАЖНО про ипотеку</div>
+        <p>Запрещено обещать клиенту что-либо касаемо одобрения ипотеки. Если клиент говорит, что у него плохая кредитная история или что он прошёл процедуру банкротства, объясняем, что у нас есть ипотечный специалист и он проконсультирует по ситуации клиента. СТРОГО ЗАПРЕЩЕНО давать любые необоснованные обещания по одобрению, процентным ставкам или размерам платежей.</p>
+      </div>
+    </div>
+    
+<!-- ОПРОС ПО ВТОРИЧКЕ -->
+<h2 class="section-title">ОПРОС ПО ВТОРИЧКЕ (ГОТОВОЕ ЖИЛЬЁ)</h2>
+
+<div class="rule-box info" style="margin-bottom:20px">
+  <div class="rule-box-icon">ℹ️</div>
+  <div class="rule-box-content">
+    <div class="rule-box-title">Стратегия работы с вторичкой</div>
+    <p>На вторичке всегда сначала пытаемся перенаправить клиента на покупку первички (так как это наше основное направление).</p>
+  </div>
+</div>
+
+<div class="script-box">
+  <p>— Понимаю желание купить готовое. А ипотеку планируете использовать? Просто по вторичке ставка сейчас выше, а по новостройкам есть субсидированные программы со ставкой всего лишь от 5%, а еще можно оформить семейную ипотеку. Задам буквально пару вопросов по Вашей ситуации, хорошо?</p>
+</div>
+
+<p style="margin: 15px 0; font-weight: 500;">Если клиент согласен — переходим к опросу по первичке ☝️</p>
+
+<h3 style="margin-top: 30px; margin-bottom: 15px; color: #d32f2f;">Если клиент настаивает, что нужна только вторичка:</h3>
+
+<div class="script-box">
+  <p>— Хочу сразу уточнить, что на первичном рынке подбор полностью бесплатный, здесь так принято. При этом на вторичке всегда есть комиссия, у нас в том числе. Готовы рассмотреть предложения от нашего специалиста по вторичному рынку на таких условиях?</p>
+</div>
+
+<div class="accordion" style="margin-top: 20px;">
+  <div class="accordion-item">
+    <input type="checkbox" id="acc-m4-sec-1" class="acc-toggle">
+    <label class="accordion-label" for="acc-m4-sec-1">
+      💬 Если клиент уточняет размер комиссии
+      <span class="acc-arrow">▼</span>
+    </label>
+    <div class="accordion-body">
+      <div class="accordion-body-inner">
+        <div class="inline-quote">— Подробнее об условиях сотрудничества расскажет специалист. Правильно понимаю, что предпочитаете вторичку?</div>
+        <p style="margin-top: 10px;"><strong>Если да</strong> — переходим к вопросам по вторичке ниже.</p>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #fff3e0; border-left: 4px solid #ff9800;">
+          <strong style="color: #e65100;">ЕСЛИ НАСТАИВАЕТ, ЧТО ХОЧЕТ УЗНАТЬ РАЗМЕР КОМИССИИ:</strong>
+          <div class="inline-quote" style="color: #333 !important;">— Чтобы не вводить Вас в заблуждение, по сумме и проценту комиссии подробно консультирует только специалист, так как у него вся актуальная информация. Подскажите, готовы рассмотреть варианты по вторичке или предпочитаете в новостройках?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <input type="checkbox" id="acc-m4-sec-2" class="acc-toggle">
+    <label class="accordion-label" for="acc-m4-sec-2">
+      💬 Если нужно обоснование комиссии
+      <span class="acc-arrow">▼</span>
+    </label>
+    <div class="accordion-body">
+      <div class="accordion-body-inner">
+        <div class="inline-quote">— Давайте объясню, за что Вы платите комиссию. Во-первых, доступ. Хорошие квартиры на вторичке уходят за 2–3 дня внутри агентств, даже не попадая на Авито или Циан, потому что продавцы не хотят показов толпе. С нами Вы видите объекты первыми, до того как их посмотрят сотни других людей. Во-вторых, торг. Продавцы закладывают процент именно на работу с агентом. Одинокому покупателю цену не снижают. Наш специалист отбивает эту сумму, поэтому в большинстве случаев комиссия полностью перекрываются скидкой. Вы либо ничего не теряете, либо остаётесь в плюсе. Кроме этого мы делаем полную юридическую проверку: цепочку за 10–15 лет, анализ продавца, проверку квартиры на обременения и перепланировки, сопровождение сделки и страховку титула. Также мы берём на себя работу со сложными продавцами. Если перед сделкой собственник вдруг потребует дополнительные 300 тысяч — этот вопрос полностью на нас. В итоге Вы получаете юридически чистую квартиру, сделку, которая не развалится, и сопровождение по договору. Давайте я задам буквально несколько вопросов по Вашей ситуации?</div>
+        <p style="margin-top: 10px;"><strong>Переходим к вопросам ниже 👇</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 20px; color: #1976d2;">📋 ОПРОС ПО ВТОРИЧКЕ</h3>
+
+<div class="script-box">
+  <p>— Отлично, тогда буквально пару вопросов уточню:</p>
+</div>
+
+<h2 class="section-title" style="margin-top: 30px;">Вопрос 1 — Район</h2>
+
+<div class="script-box">
+  <p>— В каком районе рассматриваете?</p>
+</div>
+
+<div class="rule-box tip">
+  <div class="rule-box-icon">🗺️</div>
+  <div class="rule-box-content">
+    <div class="rule-box-title">Важно</div>
+    <p>Работаем только с Москвой и Новой Москвой. Если клиент называет другой город — прощаемся.</p>
+  </div>
+</div>
+
+<h2 class="section-title">Вопрос 2 — Способ оплаты</h2>
+
+<div class="script-box">
+  <p>— Какой способ оплаты планируете? Ипотека или собственные средства?</p>
+</div>
+
+<div class="accordion">
+  <div class="accordion-item">
+    <input type="checkbox" id="acc-m4-sec-3" class="acc-toggle">
+    <label class="accordion-label" for="acc-m4-sec-3">
+      🏦 ЕСЛИ ИПОТЕКА
+      <span class="acc-arrow">▼</span>
+    </label>
+    <div class="accordion-body">
+      <div class="accordion-body-inner">
+        <div class="inline-quote">— Подскажите, тогда, есть ли у Вас первоначальный взнос?</div>
+        <div class="rule-box forbidden" style="margin-top: 15px;">
+          <div class="rule-box-icon">⚠️</div>
+          <div class="rule-box-content">
+            <div class="rule-box-title">Важно</div>
+            <p>Если нет первоначального взноса — прощаемся, не передаем дальше.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <input type="checkbox" id="acc-m4-sec-4" class="acc-toggle">
+    <label class="accordion-label" for="acc-m4-sec-4">
+      💳 ЕСЛИ СОБСТВЕННЫЕ СРЕДСТВА
+      <span class="acc-arrow">▼</span>
+    </label>
+    <div class="accordion-body">
+      <div class="accordion-body-inner">
+        <p>Фиксируем информацию и переходим к завершению диалога.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rule-box forbidden" style="margin-top: 30px;">
+  <div class="rule-box-icon">⚠️</div>
+  <div class="rule-box-content">
+    <div class="rule-box-title">ВАЖНО</div>
+    <p><strong>Если клиент планирует покупку на сумму менее 10 млн</strong> (мы не уточняем о бюджете на вторичке, только если клиент сам озвучил):</p>
+       <div class="inline-quote">— Возможно Вы имеете ввиду, что это сумма первоначального взноса?</div>
+    
+    <div style="margin-top: 15px; padding: 15px; background: #ffebee; border-radius: 8px;">
+      <strong style="color: #c62828;">ЕСЛИ НАСТАИВАЕТ, ЧТО ЭТО ВЕСЬ БЮДЖЕТ:</strong>
+      <div class="inline-quote" style="color: #333 !important;">— В необходимой Вам локации на данный момент нет предложений под Ваш бюджет. Готовы рассмотреть варианты, если предложим с бюджетом от десяти миллионов?</div>
+      <p style="margin-top: 10px; font-weight: 500; color: #d32f2f;">❌ Если клиент не согласен рассмотреть квартиру стоимость от 10 млн и выше — прощаемся, такой лид не передаем.</p>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 30px; padding: 20px; background: #e8f5e9; border-left: 4px solid #4caf50; font-weight: 500; font-size: 16px; color: #1b5e20;">
+  ✅ Если собрали всю информацию: переходим в 👉 <strong>ЗАВЕРШЕНИЕ ДИАЛОГА</strong>
+</p>
+
+    <div class="divider"></div>
+
+    <!-- QUIZ M4 -->
+    <div class="quiz-section">
+      <div class="quiz-header">
+        <div class="quiz-title">🧠 Проверь себя — Модуль 4</div>
+        <div class="quiz-subtitle">4 вопроса по квалификации лида</div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 1 из 3</div>
+        <div class="q-text">Сколько квалификационных вопросов для лида по новостройкам?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q1" id="m4q1a"><label for="m4q1a"><span class="opt-letter">A</span> 2</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q1" id="m4q1b"><label for="m4q1b"><span class="opt-letter">B</span> 3</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m4q1" id="m4q1c"><label for="m4q1c"><span class="opt-letter">C</span> 4</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q1" id="m4q1d"><label for="m4q1d"><span class="opt-letter">D</span> 6</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m4q1-ok" style="display:none">✅ Правильно! Ровно 4: район, тип квартиры, бюджет, способ оплаты.</div>
+        <div class="qfb qfb-err" id="m4q1-err" style="display:none">❌ Неверно. Правильный ответ: C — ровно 4 вопроса: район, тип квартиры, бюджет, способ оплаты.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 2 из 3</div>
+        <div class="q-text">Клиент: «Сколько стоит однушка в Москве?» Что отвечаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q2" id="m4q2a"><label for="m4q2a"><span class="opt-letter">A</span> Называем примерный диапазон</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m4q2" id="m4q2b"><label for="m4q2b"><span class="opt-letter">B</span> «Стоимость зависит от факторов, специалист проконсультирует»</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q2" id="m4q2c"><label for="m4q2c"><span class="opt-letter">C</span> Говорим, что не знаем</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q2" id="m4q2d"><label for="m4q2d"><span class="opt-letter">D</span> Уточняем район и называем цену</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m4q2-ok" style="display:none">✅ Правильно! Никаких цен! Ссылаемся на факторы ценообразования и говорим, что специалист проконсультирует.</div>
+        <div class="qfb qfb-err" id="m4q2-err" style="display:none">❌ Неверно. Правильный ответ: B — никаких цен, специалист проконсультирует.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 3 из 3</div>
+        <div class="q-text">Клиент планирует покупку в Москве в ипотеку, подходит под семейную программу (есть дети до 7 лет). Что-то нужно дополнительно уточнить?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q3" id="m4q3a"><label for="m4q3a"><span class="opt-letter">A</span> В каком банке берёт ипотеку</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q3" id="m4q3b"><label for="m4q3b"><span class="opt-letter">B</span> Размер ежемесячного платежа</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m4q3" id="m4q3c"><label for="m4q3c"><span class="opt-letter">C</span> Есть ли первоначальный взнос</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m4q3" id="m4q3d"><label for="m4q3d"><span class="opt-letter">D</span> Ничего уточнять не нужно</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m4q3-ok" style="display:none">✅ Правильно! Уточняем наличие первоначального взноса, так как покупка в Москве.</div>
+        <div class="qfb qfb-err" id="m4q3-err" style="display:none">❌ Неверно. Правильный ответ: C — обязательно уточняем наличие первоначального взноса для покупки в Москве.</div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:24px">
+        <strong>⚠️ Напоминание:</strong> Убедись, что все ответы верны перед переходом к финальному модулю.
+      </div>
+
+      <div class="module-complete" style="margin-top:28px">
+        <div class="mc-check">🎯</div>
+        <div class="mc-title">Модуль 4 пройден!</div>
+        <div class="mc-subtitle">Ты получаешь бейдж <strong style="color:var(--accent)">🎯 «Квалификатор»</strong></div>
+      </div>
+
+      <div class="badge-earned">
+        <div class="badge-icon">🎯</div>
+        <div class="badge-info">
+          <div class="badge-label">Получен бейдж</div>
+          <div class="badge-name">Квалификатор</div>
+          <div class="badge-desc">Пройден Модуль 4 — «Проведение опроса»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-btn-wrapper">
+      <div class="nav-btn secondary"><label for="nav-m3">← Назад</label></div>
+      <div class="nav-btn primary"><label for="nav-m5">Модуль 5: Завершение →</label></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ================================================================
+     MODULE 5: ЗАВЕРШЕНИЕ И ЗАПРЕТЫ
+================================================================ -->
+<div class="module-page module-5 mod5">
+  <div class="module-header">
+    <label class="back-btn" for="nav-m4">← Модуль 4</label>
+    <div class="module-header-icon">🚫</div>
+    <div class="module-header-info">
+      <div class="module-num">Модуль 5 из 5</div>
+      <div class="module-name">Завершение диалога и критические запреты</div>
+    </div>
+  </div>
+
+  <div class="module-content">
+
+    <h2 class="section-title">Получаем имя и прощаемся</h2>
+
+    <div class="text-block">
+      После проведения опроса — узнаём имя. Делаем это именно под конец диалога, так как клиент нам уже больше доверяет и ему проще раскрыться. Если бы мы спрашивали это в начале, это вызвало бы лишние возражения.
+    </div>
+
+    <div class="script-box">
+      <p>— Напомню, меня зовут <em>[Имя оператора]</em>. А как могу к Вам обращаться?</p>
+    </div>
+
+    <div class="rule-box tip">
+      <div class="rule-box-icon">🧠</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Психологический приём</div>
+        <p>Когда человек слышит Ваше имя — ему проще представиться в ответ. Он уже Вам доверяет, у Вас налажен контакт.</p>
+      </div>
+    </div>
+
+    <div class="rule-box info">
+      <div class="rule-box-icon">ℹ️</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Важные нюансы</div>
+        <p>Если клиент не назвал имя — не страшно, пишем «не представился». Если у клиента сложное имя и Вы не уверены, что произнесёте правильно — можно не обращаться по имени. Если клиент представился сокращённым именем (Таня, Ира, Саша) — так и записываем, не используем полное имя.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Скрипт прощания</h2>
+
+    <div class="rule-box forbidden">
+      <div class="rule-box-icon">🚫</div>
+      <div class="rule-box-content">
+        <div class="rule-box-title">Запрет</div>
+        <p>Нельзя использовать размытые формулировки: «специалист с вами свяжется / специалист напишет». Важно донести до клиента, что это будет именно звонок.</p>
+      </div>
+    </div>
+
+    <div class="script-box">
+      <p>— Спасибо за ответы, специалист созвонится с Вами в ближайшее время и в начале диалога назовёт моё имя <em>[Твоё имя]</em>, чтобы Вы понимали, что это от нас. При общении со специалистом у Вас будет возможность увидеть все актуальные предложения в режиме реального времени. Ожидайте звонка, до свидания!</p>
+    </div>
+
+    <h2 class="section-title">Работа с возражениями при прощании</h2>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m5-1" class="acc-toggle">
+        <label class="accordion-label" for="acc-m5-1">
+          💬 Клиент отказывается от звонка специалиста
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Диалог со специалистом займёт всего лишь несколько минут, при этом он сразу сможет сориентировать Вас по актуальным вариантам и покажет, какие есть квартиры под Ваш бюджет. Он созвонится с Вами в течение пары часов, во сколько Вам будет удобнее принять звонок?</div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m5-2" class="acc-toggle">
+        <label class="accordion-label" for="acc-m5-2">
+          💬 Клиент просит подборку в конце диалога
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Наверняка Вы хотите сами выбирать под свой запрос, а не смотреть чужие подборки, верно? Со специалистом Вы увидите именно то, что подходит Вам. Он созвонится с Вами уже сегодня и по Вашей ситуации решит, как лучше поступить, сориентирует по всем актуальным вариантам. Ожидайте звонка, всего доброго!</div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <input type="checkbox" id="acc-m5-3" class="acc-toggle">
+        <label class="accordion-label" for="acc-m5-3">
+          💬 Клиент не любит звонки / хочет только переписку / просит прислать SMS или письмо
+          <span class="acc-arrow">▼</span>
+        </label>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="inline-quote">— Давайте так: я передам информацию специалисту, он позвонит познакомиться, чтобы Вы уже имели понимание, с кем общаетесь, и по Вашей ситуации решит, как лучше поступить, сориентирует по всем актуальным вариантам, хорошо? Он созвонится с Вами уже сегодня. Ожидайте звонка, всего доброго!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">✅ Чек-лист качественного лида</h2>
+
+    <div class="checklist">
+      <div class="checklist-title">Квалификация клиента выполнена, если:</div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Подтвердили город покупки</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Уточнили район покупки</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Уточнили количество комнат</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Уточнили бюджет (клиент сам озвучил бюджет, оператор не наводил его на ответ)</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Если у клиента маленький бюджет: уточнили, имеется ли ввиду, что это сумма для первоначального взноса по ипотеке</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Уточнили способ оплаты</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Если клиент собирается покупать в ипотеку в Москве или покупает в другой локации, но не подходит под семейную: уточнили, есть ли у клиента первоначальный взнос</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Уточнили имя клиента</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>При прощании сделали акцент на то, что клиенту именно позвонят</div></div>
+    </div>
+
+    <h2 class="section-title">🚫 Критические запреты</h2>
+
+    <div class="cards-grid">
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрет #1 — Название «SunLife»</div>
+          <p>НИКОГДА не называем «SunLife» в диалоге с клиентом. Даже если он будет допытываться. Всегда = «Центр по подбору новостроек».</p>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрет #2 — Цены</div>
+          <p>НИКОГДА не называем стоимость квартир, апартаментов или коммерции. Не «примерно», не «от и до», не «в среднем». Не подтверждаем и не отрицаем бюджет клиента.</p>
+          <div class="inline-quote" style="margin-top:8px">— Стоимость зависит от различных факторов. Специалист подробно проконсультирует.</div>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрет #3 — Подборки</div>
+          <p>НИКОГДА не отправляем подборки: ни Email, ни WhatsApp, ни Telegram, ни SMS, ни ВКонтакте.</p>
+          <div class="inline-quote" style="margin-top:8px">— Специалист созвонится с вами и обсудит все варианты лично.</div>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрет #4 — Консультации</div>
+          <p>Не консультируем по деталям: параметры ипотеки, условия акций, юридические нюансы, размер комиссии по вторичке — всё это расскажет специалист.</p>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрет #5 — Адрес офиса</div>
+          <p>Не озвучиваем детальный адрес. Говорим только общую фразу «Мы находимся в Москва Сити». Детальный адрес офиса озвучит специалист.</p>
+        </div>
+      </div>
+      <div class="rule-box forbidden">
+        <div class="rule-box-icon">🚫</div>
+        <div class="rule-box-content">
+          <div class="rule-box-title">Запрет #6 — Юридические реквизиты</div>
+          <p>Не подтверждаем названий, конкретных адресов, ИНН, ОГРН и прочего. Если клиент требует — объясняем, что наизусть не помним.</p>
+          <div class="inline-quote" style="margin-top:8px">— К сожалению, такую информацию наизусть не помню, поэтому сейчас не подскажу. Все реквизиты, договор и иные документы пришлёт специалист.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- QUIZ M5 -->
+    <div class="quiz-section">
+      <div class="quiz-header">
+        <div class="quiz-title">🧠 Финальный тест — Модуль 5</div>
+        <div class="quiz-subtitle">Проверка знаний по завершению диалога и запретам</div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 1 из 4</div>
+        <div class="q-text">Клиент уточняет: «Смогу ли я уложиться в 6 млн на однушку?» Ответ?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q1" id="m5q1a"><label for="m5q1a"><span class="opt-letter">A</span> «Да, можно найти варианты»</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q1" id="m5q1b"><label for="m5q1b"><span class="opt-letter">B</span> «Нет, дороже»</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m5q1" id="m5q1c"><label for="m5q1c"><span class="opt-letter">C</span> «Стоимость зависит от различных факторов — специалист проконсультирует»</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q1" id="m5q1d"><label for="m5q1d"><span class="opt-letter">D</span> Называем диапазон</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m5q1-ok" style="display:none">✅ Правильно! Бюджет не подтверждаем и не отрицаем. Вся информация у специалиста.</div>
+        <div class="qfb qfb-err" id="m5q1-err" style="display:none">❌ Неверно. Правильный ответ: C — бюджет не подтверждаем и не отрицаем.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 2 из 4</div>
+        <div class="q-text">Клиент просит подборку в Telegram. Ответ?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q2" id="m5q2a"><label for="m5q2a"><span class="opt-letter">A</span> Отправляем 2–3 варианта</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q2" id="m5q2b"><label for="m5q2b"><span class="opt-letter">B</span> Отправляем только один</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m5q2" id="m5q2c"><label for="m5q2c"><span class="opt-letter">C</span> «Специалист созвонится и обсудит лично»</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q2" id="m5q2d"><label for="m5q2d"><span class="opt-letter">D</span> Отправляем ссылку</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m5q2-ok" style="display:none">✅ Правильно! ЗАПРЕЩЕНО обещать отправку подборок в любом виде.</div>
+        <div class="qfb qfb-err" id="m5q2-err" style="display:none">❌ Неверно. Правильный ответ: C — никаких подборок, специалист созвонится и обсудит лично.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 3 из 4</div>
+        <div class="q-text">Клиент оскорбляет и матерится в ваш адрес. Что делаем?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q3" id="m5q3a"><label for="m5q3a"><span class="opt-letter">A</span> Вежливо просим перестать и продолжаем</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q3" id="m5q3b"><label for="m5q3b"><span class="opt-letter">B</span> Предупреждаем один раз, потом кладём трубку</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m5q3" id="m5q3c"><label for="m5q3c"><span class="opt-letter">C</span> Сразу завершаем звонок</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q3" id="m5q3d"><label for="m5q3d"><span class="opt-letter">D</span> Переключаем на руководителя</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m5q3-ok" style="display:none">✅ Правильно! Клиент оскорбляет нас — завершаем звонок немедленно, можно даже без прощания. Бережём свои нервы.</div>
+        <div class="qfb qfb-err" id="m5q3-err" style="display:none">❌ Неверно. Правильный ответ: C — сразу завершаем звонок. Бережём свои нервы.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос 4 из 4</div>
+        <div class="q-text">Клиент требует юридические реквизиты. Ответ?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q4" id="m5q4a"><label for="m5q4a"><span class="opt-letter">A</span> Называем ИНН и ОГРН (находим в интернете)</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m5q4" id="m5q4b"><label for="m5q4b"><span class="opt-letter">B</span> «Наизусть не помню — все реквизиты предоставит специалист»</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q4" id="m5q4c"><label for="m5q4c"><span class="opt-letter">C</span> Озвучиваем название компании и ждём реакции</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q4" id="m5q4d"><label for="m5q4d"><span class="opt-letter">D</span> Молчим</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m5q4-ok" style="display:none">✅ Правильно! Реквизиты «наизусть не помним». Специалист предоставит все документы.</div>
+        <div class="qfb qfb-err" id="m5q4-err" style="display:none">❌ Неверно. Правильный ответ: B — реквизиты наизусть не помним, специалист предоставит документы.</div>
+      </div>
+
+      <!-- Когда спрашиваем имя -->
+      <div class="quiz-q">
+        <div class="q-num">Вопрос БОНУС</div>
+        <div class="q-text">Когда спрашиваем имя клиента?</div>
+        <div class="opt-row">
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q5" id="m5q5a"><label for="m5q5a"><span class="opt-letter">A</span> В самом начале звонка</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q5" id="m5q5b"><label for="m5q5b"><span class="opt-letter">B</span> Сразу после приветствия</label></div>
+          <div class="opt-item correct-answer"><input type="radio" name="m5q5" id="m5q5c"><label for="m5q5c"><span class="opt-letter">C</span> В конце — после всех вопросов</label></div>
+          <div class="opt-item wrong-answer"><input type="radio" name="m5q5" id="m5q5d"><label for="m5q5d"><span class="opt-letter">D</span> Имя вообще не нужно</label></div>
+        </div>
+        <div class="qfb qfb-ok" id="m5q5-ok" style="display:none">✅ Правильно! Имя спрашиваем в конце — клиент уже расслабился и охотнее представится.</div>
+        <div class="qfb qfb-err" id="m5q5-err" style="display:none">❌ Неверно. Правильный ответ: C — имя спрашиваем в конце, когда установлен контакт.</div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:24px">
+        <strong>⚠️ Это последний модуль!</strong> Убедись, что все ответы верны, и переходи к финальному экрану с твоими бейджами и итоговым результатом.
+      </div>
+
+      <div class="module-complete" style="margin-top:28px">
+        <div class="mc-check">🤐</div>
+        <div class="mc-title">Модуль 5 пройден!</div>
+        <div class="mc-subtitle">Ты получаешь бейдж <strong style="color:var(--accent)">🤐 «Молчание — золото»</strong></div>
+      </div>
+
+      <div class="badge-earned">
+        <div class="badge-icon">🤐</div>
+        <div class="badge-info">
+          <div class="badge-label">Получен бейдж</div>
+          <div class="badge-name">Молчание — золото</div>
+          <div class="badge-desc">Пройден Модуль 5 — «Завершение и критические запреты»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-btn-wrapper">
+      <div class="nav-btn secondary"><label for="nav-m4">← Назад</label></div>
+      <div class="nav-btn primary" style="background:linear-gradient(135deg,#f5c518,#ff6b35)"><label for="nav-final">🏆 Завершить курс!</label></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ================================================================
+     FINAL SCREEN
+================================================================ -->
+<div class="module-page module-final final-screen">
+
+  <div class="final-hero-row">
+  <div class="final-trophy">🏆</div>
+  <h1 class="final-title">Курс <span>пройден!</span></h1>
+</div>
+
+<p class="final-subtitle">
+  Ты изучил весь материал по работе со скриптом SunLife.<br>
+  Теперь переходи к основному курсу обучения оператора!
+</p>
+
+<div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; text-align: center;">
+  <p style="color: white; font-size: 18px; margin-bottom: 15px; font-weight: 500;">
+    🎯 Следующий этап обучения
+  </p>
+  <a href="https://mirandaandros6-bot.github.io/operator-lid-course-progress/" 
+     style="display: inline-block; 
+            padding: 15px 40px; 
+            background: white; 
+            color: #667eea; 
+            text-decoration: none; 
+            border-radius: 30px; 
+            font-weight: bold; 
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;">
+    📚 Перейти к основному курсу обучения
+  </a>
+  <p style="color: rgba(255,255,255,0.9); margin-top: 15px; font-size: 14px;">
+    Этап 2: Регистрация Яндекс Почты
+  </p>
+</div>
+
+  <h2 class="section-title" style="justify-content:center;margin-bottom:24px">Твои бейджи</h2>
+
+  <div class="badges-parade">
+    <div class="parade-badge" style="animation-delay:0.1s">
+      <div class="parade-badge-icon">🥇</div>
+      <div class="parade-badge-name">Первый шаг</div>
+    </div>
+    <div class="parade-badge" style="animation-delay:0.2s">
+      <div class="parade-badge-icon">📚</div>
+      <div class="parade-badge-name">Прилежный ученик</div>
+    </div>
+    <div class="parade-badge" style="animation-delay:0.3s">
+      <div class="parade-badge-icon">🛡️</div>
+      <div class="parade-badge-name">Мастер диалога</div>
+    </div>
+    <div class="parade-badge" style="animation-delay:0.4s">
+      <div class="parade-badge-icon">🎯</div>
+      <div class="parade-badge-name">Квалификатор</div>
+    </div>
+    <div class="parade-badge" style="animation-delay:0.5s">
+      <div class="parade-badge-icon">🤐</div>
+      <div class="parade-badge-name">Молчание — золото</div>
+    </div>
+    <div class="parade-badge" style="animation-delay:0.6s;border-color:rgba(245,197,24,0.5)">
+      <div class="parade-badge-icon">🏆</div>
+      <div class="parade-badge-name">Знаток скрипта</div>
+    </div>
+  </div>
+
+  <!-- Score breakdown -->
+  <div class="final-score-box">
+    <div class="final-score-num">5/5</div>
+    <div class="final-score-label">Модулей завершено</div>
+    <div style="margin-top:16px">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width:100%"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-top:6px">Прогресс курса: 100%</div>
+    </div>
+  </div>
+
+  <!-- Badge levels -->
+  <div style="max-width:560px;width:100%;margin:24px auto">
+    <div class="highlight-box" style="text-align:left">
+      <strong>🏅 Итоговый результат:</strong><br><br>
+      Если ты ответил правильно на <strong style="color:var(--green2)">100%</strong> вопросов во всех тестах — ты получаешь бейдж <strong style="color:var(--accent)">👑 «Легенда линии»</strong> и звание «Мастер лидогенерации»!<br><br>
+      Если ты набрал от <strong>80% до 99%</strong> правильных ответов — ты получаешь бейдж <strong style="color:var(--blue2)">⭐ «Успешный стажёр»</strong>. Вернись к модулям, перечитай материал и перепройди тесты, чтобы разблокировать «Мастера лидогенерации»!
+    </div>
+  </div>
+
+  <!-- Special badges -->
+  <div class="badges-parade" style="margin-top:8px">
+    <div class="parade-badge" style="background:linear-gradient(135deg,rgba(245,197,24,0.2),rgba(74,144,217,0.1));border-color:rgba(245,197,24,0.6);animation-delay:0.7s">
+      <div class="parade-badge-icon">⭐</div>
+      <div class="parade-badge-name">Успешный стажёр</div>
+      <div style="font-size:10px;color:var(--text3);text-align:center">80–99% правильных ответов</div>
+    </div>
+    <div class="parade-badge" style="background:linear-gradient(135deg,rgba(245,197,24,0.25),rgba(255,107,53,0.1));border-color:var(--accent);animation-delay:0.8s">
+      <div class="parade-badge-icon">👑</div>
+      <div class="parade-badge-name">Легенда линии</div>
+      <div style="font-size:10px;color:var(--text3);text-align:center">100% правильных ответов</div>
+    </div>
+    <div class="parade-badge" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(245,197,24,0.05));border-color:rgba(139,92,246,0.4);animation-delay:0.9s">
+      <div class="parade-badge-icon">🔥</div>
+      <div class="parade-badge-name">Мастер лидогенерации</div>
+      <div style="font-size:10px;color:var(--text3);text-align:center">Все модули на 100%</div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+    <div class="nav-btn secondary"><label for="nav-hero" style="cursor:pointer">← На главную</label></div>
+    <div class="nav-btn primary"><label for="nav-m1" style="cursor:pointer">🔄 Начать заново</label></div>
+  </div>
+
+  <div style="margin-top:40px;color:var(--text3);font-size:12px;text-align:center;max-width:400px">
+    Для получения финального бейджа покажи результаты тестов руководителю. Удачи на линии! 🎉
+  </div>
+
+</div>
+
+</div><!-- end .shell -->
+
+<script>
+// ============================================================
+// QUIZ ENGINE — полноценная логика тестов с JS
+// ============================================================
+
+// Конфигурация тестов: { модуль: { вопрос: правильный_ответ } }
+const QUIZ_CONFIG = {
+  m1: { q1: 'b', q2: 'b', q3: 'c', q4: 'b', q5: 'c' },
+  m2: { q1: 'b', q2: 'c', q3: 'b', q4: 'b', q5: 'b' },
+  m3: { q1: 'b', q2: 'c', q3: 'd', q4: 'c' },
+  m4: { q1: 'c', q2: 'b', q3: 'c' },
+  m5: { q1: 'c', q2: 'c', q3: 'c', q4: 'b', q5: 'c' }
+};
+
+const PASS_THRESHOLD = 0.8; // 80%
+
+// Глобальный счётчик правильных ответов по модулям
+const moduleResults = {};
+
+// Объяснения к ответам
+const EXPLANATIONS = {
+  m1: {
+    q1: { ok: '✅ Правильно! Название «SunLife» озвучивать клиентам ЗАПРЕЩЕНО. Всегда представляем как «Центр по подбору новостроек».', err: '❌ Неверно. Правильный ответ: Б — «Центр по подбору новостроек». Название «SunLife» клиентам никогда не называем.' },
+    q2: { ok: '✅ Правильно! Казань не в нашем списке. Объясняем и предлагаем рассмотреть Москву как инвестицию.', err: '❌ Неверно. Правильный ответ: Б — Казань не в нашем списке, объясняем и предлагаем Москву.' },
+    q3: { ok: '✅ Правильно! Только квартиры и апартаменты в новостройках. Дома, участки — не наш профиль.', err: '❌ Неверно. Правильный ответ: В — только квартиры и апартаменты в новостройках.' },
+    q4: { ok: '✅ Правильно! Клиент заходил на много сайтов и не помнит источник. Или говорит так специально, чтобы отстали.', err: '❌ Неверно. Правильный ответ: Б — клиент посещал много сайтов и просто не помнит, где оставлял заявку.' },
+    q5: { ok: '✅ Правильно! Диалог — 1-2 минуты. Мы не консультируем, мы квалифицируем.', err: '❌ Неверно. Правильный ответ: В — 1–2 минуты. Мы квалифицируем, а не консультируем.' }
+  },
+  m2: {
+    q1: { ok: '✅ Правильно! Приветствие уже включает первый квалификационный вопрос про Москву.', err: '❌ Неверно. Правильный ответ: Б — приветствие включает первый квалифицирующий вопрос про Москву.' },
+    q2: { ok: '✅ Правильно! Если клиент подтвердил интерес — сразу в квалификацию! Никаких лишних объяснений.', err: '❌ Неверно. Правильный ответ: В — немедленно переходим к четырём квалификационным вопросам.' },
+    q3: { ok: '✅ Правильно! Соглашаемся на перезвон, но сразу задаём вопрос. Клиент часто отвечает по инерции.', err: '❌ Неверно. Правильный ответ: Б — договариваемся о перезвоне и сразу задаём вопрос квалификации.' },
+    q4: { ok: '✅ Правильно! Москва — наш ориентир. Упоминание в приветствии — это первый квалифицирующий вопрос.', err: '❌ Неверно. Правильный ответ: Б — Москва основное направление и первый квалифицирующий вопрос.' },
+    q5: { ok: '✅ Правильно! 80% говорящих «уже купил» — врут. Поздравляем и предлагаем рассмотреть ещё одну покупку.', err: '❌ Неверно. Правильный ответ: Б — поздравляем и предлагаем рассмотреть ещё одну покупку.' }
+  },
+  m3: {
+    q1: { ok: '✅ Правильно! Минимум 2 раза. На третий — вежливо прощаемся.', err: '❌ Неверно. Правильный ответ: Б — минимум 2 раза. На третий — вежливо прощаемся.' },
+    q2: { ok: '✅ Правильно! Брокеры и агенты — сразу прощаемся. Такие лиды не передаём.', err: '❌ Неверно. Правильный ответ: В — брокеры и агенты, сразу прощаемся, такие лиды не передаём.' },
+    q3: { ok: '✅ Правильно! Размер комиссии по вторичке не называем никогда. Актуальная информация только у специалиста.', err: '❌ Неверно. Правильный ответ: Г — размер комиссии не называем никогда.' },
+    q4: { ok: '✅ Правильно! Один раз мягко предлагаем альтернативу. Если отказывается — прощаемся без давления.', err: '❌ Неверно. Правильный ответ: В — после одной попытки перенаправить прощаемся.' }
+  },
+  m4: {
+    q1: { ok: '✅ Правильно! Ровно 4: район, тип квартиры, бюджет, способ оплаты.', err: '❌ Неверно. Правильный ответ: В — ровно 4 вопроса: район, тип, бюджет, способ оплаты.' },
+    q2: { ok: '✅ Правильно! Никаких цен! Ссылаемся на факторы ценообразования и говорим, что специалист проконсультирует.', err: '❌ Неверно. Правильный ответ: Б — никаких цен, специалист проконсультирует.' },
+    q3: { ok: '✅ Правильно! Уточняем наличие первоначального взноса, так как покупка в Москве.', err: '❌ Неверно. Правильный ответ: В — обязательно уточняем наличие первоначального взноса для Москвы.' }
+  },
+  m5: {
+    q1: { ok: '✅ Правильно! Бюджет не подтверждаем и не отрицаем. Вся информация у специалиста.', err: '❌ Неверно. Правильный ответ: В — бюджет не подтверждаем и не отрицаем.' },
+    q2: { ok: '✅ Правильно! ЗАПРЕЩЕНО обещать отправку подборок в любом виде.', err: '❌ Неверно. Правильный ответ: В — никаких подборок, специалист созвонится и обсудит лично.' },
+    q3: { ok: '✅ Правильно! Клиент оскорбляет нас — завершаем звонок немедленно. Бережём свои нервы.', err: '❌ Неверно. Правильный ответ: В — сразу завершаем звонок. Бережём свои нервы.' },
+    q4: { ok: '✅ Правильно! Реквизиты «наизусть не помним». Специалист предоставит все документы.', err: '❌ Неверно. Правильный ответ: Б — реквизиты наизусть не помним, специалист предоставит документы.' },
+    q5: { ok: '✅ Правильно! Имя спрашиваем в конце — клиент уже расслабился и охотнее представится.', err: '❌ Неверно. Правильный ответ: В — имя спрашиваем в конце, когда контакт уже установлен.' }
+  }
+};
+
+// ============================================================
+// Инициализация радиокнопок для квизов
+// ============================================================
+function initQuiz(moduleId, questions) {
+  Object.keys(questions).forEach(qKey => {
+    const correctAnswer = questions[qKey];
+    const options = ['a', 'b', 'c', 'd'];
+
+    options.forEach(opt => {
+      const radio = document.getElementById(`${moduleId}${qKey}${opt}`);
+      if (!radio) return;
+
+      radio.addEventListener('change', () => {
+        // Сбрасываем все опции в этом вопросе
+        options.forEach(o => {
+          const r = document.getElementById(`${moduleId}${qKey}${o}`);
+          if (!r) return;
+          const label = r.nextElementSibling;
+          if (label) {
+            label.style.borderColor = '';
+            label.style.background = '';
+            label.style.color = '';
+            const letter = label.querySelector('.opt-letter');
+            if (letter) {
+              letter.style.background = '';
+              letter.style.color = '';
+            }
+          }
+        });
+
+        // Скрываем старые фидбеки
+        const okEl = document.getElementById(`${moduleId}${qKey}-ok`);
+        const errEl = document.getElementById(`${moduleId}${qKey}-err`);
+        if (okEl) okEl.style.display = 'none';
+        if (errEl) errEl.style.display = 'none';
+
+        const selectedLabel = radio.nextElementSibling;
+        const letter = selectedLabel ? selectedLabel.querySelector('.opt-letter') : null;
+        const isCorrect = (opt === correctAnswer);
+
+        if (isCorrect) {
+          if (selectedLabel) {
+            selectedLabel.style.borderColor = 'rgba(39,174,96,0.7)';
+            selectedLabel.style.background = 'rgba(39,174,96,0.12)';
+            selectedLabel.style.color = '#e8ecf4';
+          }
+          if (letter) {
+            letter.style.background = '#27ae60';
+            letter.style.color = '#000';
+          }
+          if (okEl) okEl.style.display = 'block';
+        } else {
+          if (selectedLabel) {
+            selectedLabel.style.borderColor = 'rgba(231,76,60,0.7)';
+            selectedLabel.style.background = 'rgba(231,76,60,0.1)';
+            selectedLabel.style.color = '#e8ecf4';
+          }
+          if (letter) {
+            letter.style.background = '#e74c3c';
+            letter.style.color = '#fff';
+          }
+          if (errEl) errEl.style.display = 'block';
+
+          // Подсвечиваем правильный ответ
+          const correctRadio = document.getElementById(`${moduleId}${qKey}${correctAnswer}`);
+          if (correctRadio) {
+            const correctLabel = correctRadio.nextElementSibling;
+            const correctLetter = correctLabel ? correctLabel.querySelector('.opt-letter') : null;
+            if (correctLabel) {
+              correctLabel.style.borderColor = 'rgba(39,174,96,0.5)';
+              correctLabel.style.background = 'rgba(39,174,96,0.07)';
+            }
+            if (correctLetter) {
+              correctLetter.style.background = 'rgba(39,174,96,0.3)';
+              correctLetter.style.color = '#2ecc71';
+            }
+          }
+        }
+
+        // Проверяем результат теста модуля
+        checkModuleCompletion(moduleId, questions);
+        updateModuleHeader(moduleId);
+      });
+    });
+  });
+}
+
+// ============================================================
+// Проверка завершения модуля
+// ============================================================
+function checkModuleCompletion(moduleId, questions) {
+  const qKeys = Object.keys(questions);
+  let correct = 0;
+  let answered = 0;
+
+  qKeys.forEach(qKey => {
+    const options = ['a', 'b', 'c', 'd'];
+    let qAnswered = false;
+    options.forEach(opt => {
+      const radio = document.getElementById(`${moduleId}${qKey}${opt}`);
+      if (radio && radio.checked) {
+        qAnswered = true;
+        if (opt === questions[qKey]) correct++;
+      }
+    });
+    if (qAnswered) answered++;
+  });
+
+  const total = qKeys.length;
+  const score = total > 0 ? correct / total : 0;
+  const allAnswered = answered === total;
+
+  moduleResults[moduleId] = { correct, total, score, allAnswered };
+
+  // Обновляем блок результата модуля
+  updateModuleResultBlock(moduleId, correct, total, score, allAnswered);
+}
+
+// ============================================================
+// Обновление блока результата в модуле
+// ============================================================
+function updateModuleResultBlock(moduleId, correct, total, score, allAnswered) {
+  const resultBlock = document.getElementById(`${moduleId}-result-block`);
+  if (!resultBlock) return;
+
+  const pct = Math.round(score * 100);
+  const passed = score >= PASS_THRESHOLD;
+  const modNum = moduleId[1];
+
+  // Show/hide module-complete banner and badge
+  const completeBanner = document.querySelector(`.module-${modNum} .module-complete`);
+  const badgeBanner = document.querySelector(`.module-${modNum} .badge-earned`);
+
+  if (!allAnswered) {
+    resultBlock.innerHTML = `
+      <div style="background:rgba(74,144,217,0.08);border:1px solid rgba(74,144,217,0.25);border-radius:10px;padding:16px 20px;margin-top:20px;text-align:center;color:#60a5f8;font-size:14px">
+        ⏳ Ответь на все вопросы теста, чтобы увидеть результат
+      </div>`;
+    if (completeBanner) completeBanner.style.display = 'none';
+    if (badgeBanner) badgeBanner.style.display = 'none';
+    return;
+  }
+
+  if (passed) {
+    resultBlock.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(39,174,96,0.12),rgba(245,197,24,0.06));border:1px solid rgba(39,174,96,0.35);border-radius:14px;padding:28px;text-align:center;margin-top:24px;animation:badgePop 0.6s ease">
+        <div style="font-size:40px;margin-bottom:8px">🎉</div>
+        <div style="font-family:Unbounded,sans-serif;font-size:18px;font-weight:700;color:#2ecc71;margin-bottom:6px">Отлично! Тест пройден!</div>
+        <div style="font-size:28px;font-family:Unbounded,sans-serif;font-weight:900;color:#f5c518;margin:8px 0">${correct}/${total} (${pct}%)</div>
+        <div style="font-size:14px;color:#a8b3cc">Можешь переходить к следующему модулю 👇</div>
+      </div>`;
+    // Show the module-complete banner and badge
+    if (completeBanner) { completeBanner.style.display = 'block'; }
+    if (badgeBanner) { badgeBanner.style.display = 'flex'; }
+  } else {
+    resultBlock.innerHTML = `
+      <div style="background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:14px;padding:28px;text-align:center;margin-top:24px">
+        <div style="font-size:40px;margin-bottom:8px">😔</div>
+        <div style="font-family:Unbounded,sans-serif;font-size:18px;font-weight:700;color:#ff6b6b;margin-bottom:6px">Нужно пересдать тест</div>
+        <div style="font-size:28px;font-family:Unbounded,sans-serif;font-weight:900;color:#ff6b6b;margin:8px 0">${correct}/${total} (${pct}%)</div>
+        <div style="font-size:14px;color:#a8b3cc;margin-bottom:16px">Для перехода нужно набрать минимум 80%. Перечитай материал и попробуй снова.</div>
+        <button onclick="resetQuiz('${moduleId}')" style="background:#e74c3c;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-family:Unbounded,sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px">🔄 Пройти тест заново</button>
+      </div>`;
+    // Hide the banners on fail
+    if (completeBanner) completeBanner.style.display = 'none';
+    if (badgeBanner) badgeBanner.style.display = 'none';
+  }
+
+  // Обновляем финальный экран
+  updateFinalScreen();
+}
+
+// ============================================================
+// Сброс квиза модуля
+// ============================================================
+function resetQuiz(moduleId) {
+  const questions = QUIZ_CONFIG[moduleId];
+  if (!questions) return;
+
+  Object.keys(questions).forEach(qKey => {
+    ['a', 'b', 'c', 'd'].forEach(opt => {
+      const radio = document.getElementById(`${moduleId}${qKey}${opt}`);
+      if (!radio) return;
+      radio.checked = false;
+      const label = radio.nextElementSibling;
+      if (label) {
+        label.style.borderColor = '';
+        label.style.background = '';
+        label.style.color = '';
+        const letter = label.querySelector('.opt-letter');
+        if (letter) { letter.style.background = ''; letter.style.color = ''; }
+      }
+    });
+
+    const okEl = document.getElementById(`${moduleId}${qKey}-ok`);
+    const errEl = document.getElementById(`${moduleId}${qKey}-err`);
+    if (okEl) okEl.style.display = 'none';
+    if (errEl) errEl.style.display = 'none';
+  });
+
+  delete moduleResults[moduleId];
+
+  // Hide banners
+  const modNum = moduleId[1];
+  const completeBanner = document.querySelector(`.module-${modNum} .module-complete`);
+  const badgeBanner = document.querySelector(`.module-${modNum} .badge-earned`);
+  if (completeBanner) completeBanner.style.display = 'none';
+  if (badgeBanner) badgeBanner.style.display = 'none';
+
+  const resultBlock = document.getElementById(`${moduleId}-result-block`);
+  if (resultBlock) {
+    resultBlock.innerHTML = `
+      <div style="background:rgba(74,144,217,0.08);border:1px solid rgba(74,144,217,0.25);border-radius:10px;padding:16px 20px;margin-top:20px;text-align:center;color:#60a5f8;font-size:14px">
+        ⏳ Ответь на все вопросы теста, чтобы увидеть результат
+      </div>`;
+  }
+  updateFinalScreen();
+}
+
+// ============================================================
+// Финальный экран с реальным подсчётом баллов
+// ============================================================
+function updateFinalScreen() {
+  const finalScoreEl = document.getElementById('final-total-score');
+  const finalBadgeEl = document.getElementById('final-badge-result');
+  const finalProgressEl = document.getElementById('final-progress-bar');
+  const finalModulesEl = document.getElementById('final-modules-count');
+
+  if (!finalScoreEl) return;
+
+  let totalCorrect = 0;
+  let totalQuestions = 0;
+  let modulesPassed = 0;
+
+  Object.keys(QUIZ_CONFIG).forEach(mod => {
+    const qs = QUIZ_CONFIG[mod];
+    const qCount = Object.keys(qs).length;
+    totalQuestions += qCount;
+
+    if (moduleResults[mod]) {
+      totalCorrect += moduleResults[mod].correct;
+      if (moduleResults[mod].score >= PASS_THRESHOLD && moduleResults[mod].allAnswered) {
+        modulesPassed++;
+      }
+    }
+  });
+
+  const totalModules = Object.keys(QUIZ_CONFIG).length;
+  const overallPct = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+  const allPassed = modulesPassed === totalModules;
+
+  finalScoreEl.textContent = `${totalCorrect}/${totalQuestions}`;
+  if (finalModulesEl) finalModulesEl.textContent = `${modulesPassed}/${totalModules}`;
+  if (finalProgressEl) finalProgressEl.style.width = `${overallPct}%`;
+
+  if (!finalBadgeEl) return;
+
+  if (overallPct === 100 && allPassed) {
+    finalBadgeEl.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(245,197,24,0.2),rgba(255,107,53,0.08));border:2px solid #f5c518;border-radius:16px;padding:28px 32px;text-align:center;animation:badgePop 0.8s ease">
+        <div style="font-size:56px;margin-bottom:10px">👑</div>
+        <div style="font-family:Unbounded,sans-serif;font-size:22px;font-weight:900;color:#f5c518;margin-bottom:8px">Легенда линии!</div>
+        <div style="font-size:40px;font-family:Unbounded,sans-serif;font-weight:900;color:#f5c518;margin:6px 0">${overallPct}%</div>
+        <div style="font-size:15px;color:#e8ecf4;margin-top:8px">🔥 Ты получаешь звание <strong>Мастер лидогенерации</strong>!<br>Все модули пройдены на 100%. Покажи результат руководителю!</div>
+      </div>`;
+  } else if (overallPct >= 80 && allPassed) {
+    finalBadgeEl.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(74,144,217,0.12),rgba(245,197,24,0.05));border:2px solid rgba(74,144,217,0.5);border-radius:16px;padding:28px 32px;text-align:center;animation:badgePop 0.8s ease">
+        <div style="font-size:56px;margin-bottom:10px">⭐</div>
+        <div style="font-family:Unbounded,sans-serif;font-size:22px;font-weight:900;color:#60a5f8;margin-bottom:8px">Успешный стажёр!</div>
+        <div style="font-size:40px;font-family:Unbounded,sans-serif;font-weight:900;color:#60a5f8;margin:6px 0">${overallPct}%</div>
+        <div style="font-size:14px;color:#a8b3cc;margin-top:8px">Хороший результат! Чтобы получить бейдж «Мастер лидогенерации» — перепройди тесты и набери 100%.</div>
+      </div>`;
+  } else if (overallPct > 0) {
+    finalBadgeEl.innerHTML = `
+      <div style="background:rgba(231,76,60,0.08);border:2px solid rgba(231,76,60,0.35);border-radius:16px;padding:28px 32px;text-align:center">
+        <div style="font-size:56px;margin-bottom:10px">📖</div>
+        <div style="font-family:Unbounded,sans-serif;font-size:20px;font-weight:700;color:#ff6b6b;margin-bottom:8px">Продолжай учиться!</div>
+        <div style="font-size:36px;font-family:Unbounded,sans-serif;font-weight:900;color:#ff6b6b;margin:6px 0">${overallPct}%</div>
+        <div style="font-size:14px;color:#a8b3cc;margin-top:8px">Не все тесты пройдены. Вернись к модулям с ❌ и перепройди тесты. Нужно минимум 80% в каждом модуле.</div>
+      </div>`;
+  } else {
+    finalBadgeEl.innerHTML = `
+      <div style="background:rgba(74,144,217,0.07);border:1px solid rgba(74,144,217,0.2);border-radius:16px;padding:24px 28px;text-align:center">
+        <div style="font-size:14px;color:#60a5f8">Пройди тесты во всех модулях, чтобы увидеть свой финальный результат!</div>
+      </div>`;
+  }
+}
+
+// ============================================================
+// Инъекция динамических блоков в DOM
+// ============================================================
+function injectResultBlocks() {
+  // Для каждого модуля добавляем div для результата перед .module-complete
+  Object.keys(QUIZ_CONFIG).forEach(modId => {
+    const completeBanner = document.querySelector(`.module-${modId[1]} .module-complete`);
+    if (!completeBanner) return;
+
+    // Проверяем, нет ли уже блока
+    if (document.getElementById(`${modId}-result-block`)) return;
+
+    const resultDiv = document.createElement('div');
+    resultDiv.id = `${modId}-result-block`;
+    resultDiv.innerHTML = `
+      <div style="background:rgba(74,144,217,0.08);border:1px solid rgba(74,144,217,0.25);border-radius:10px;padding:16px 20px;margin-top:20px;text-align:center;color:#60a5f8;font-size:14px">
+        ⏳ Ответь на все вопросы теста, чтобы увидеть результат
+      </div>`;
+    completeBanner.parentNode.insertBefore(resultDiv, completeBanner);
+  });
+
+  // Финальный блок на странице результатов
+  const finalScreen = document.querySelector('.module-final');
+  if (finalScreen && !document.getElementById('final-badge-result')) {
+    // Вставляем динамические элементы в финальный экран
+    const scoreBox = finalScreen.querySelector('.final-score-box');
+    if (scoreBox) {
+      scoreBox.innerHTML = `
+        <div id="final-total-score" style="font-family:Unbounded,sans-serif;font-size:52px;font-weight:900;color:#f5c518;line-height:1">—</div>
+        <div style="font-size:14px;color:#6b7a99;margin-top:4px">Правильных ответов</div>
+        <div style="margin-top:16px">
+          <div style="background:#181c26;border-radius:100px;height:8px;overflow:hidden;">
+            <div id="final-progress-bar" style="height:100%;border-radius:100px;background:linear-gradient(90deg,#f5c518,#ffd700);transition:width 1.2s ease;width:0%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px">
+            <div style="font-size:12px;color:#6b7a99">Модулей пройдено: <span id="final-modules-count" style="color:#f5c518">0/5</span></div>
+            <div style="font-size:12px;color:#6b7a99">Порог: 80%</div>
+          </div>
+        </div>`;
+    }
+
+    const badgeParade = finalScreen.querySelector('.badges-parade');
+    if (badgeParade) {
+      const badgeResultDiv = document.createElement('div');
+      badgeResultDiv.id = 'final-badge-result';
+      badgeResultDiv.style.cssText = 'width:100%;max-width:540px;margin:24px auto 0;';
+      badgeResultDiv.innerHTML = `
+        <div style="background:rgba(74,144,217,0.07);border:1px solid rgba(74,144,217,0.2);border-radius:16px;padding:24px 28px;text-align:center">
+          <div style="font-size:14px;color:#60a5f8">Пройди тесты во всех модулях, чтобы увидеть свой финальный результат!</div>
+        </div>`;
+      badgeParade.parentNode.insertBefore(badgeResultDiv, badgeParade.nextSibling);
+    }
+  }
+}
+
+// ============================================================
+// Блокировка кнопок перехода при непройденном тесте
+// ============================================================
+// Кнопки перехода между модулями управляются через <label for="nav-...">
+// При клике на кнопку проверяем, пройден ли тест предыдущего модуля
+
+const MODULE_ORDER = ['m1', 'm2', 'm3', 'm4', 'm5'];
+// Маппинг: какой тест нужно сдать, чтобы перейти к следующему модулю
+const NEXT_MODULE_MAP = {
+  'm1': 'nav-m2',  // из м1 в м2 — нужно сдать тест м1
+  'm2': 'nav-m3',
+  'm3': 'nav-m4',
+  'm4': 'nav-m5',
+  'm5': 'nav-final'
+};
+
+function interceptNextButtons() {
+  // Находим все кнопки «Следующий модуль»
+  // Они — label[for="nav-m*"] внутри .module-N
+  document.querySelectorAll('.next-btn-wrapper .nav-btn.primary label').forEach(lbl => {
+    const forAttr = lbl.getAttribute('for');
+    if (!forAttr || !forAttr.startsWith('nav-m') && forAttr !== 'nav-final') return;
+
+    // Находим, в каком модуле находится эта кнопка
+    let parentModule = null;
+    let el = lbl;
+    while (el) {
+      if (el.className && typeof el.className === 'string') {
+        const match = el.className.match(/module-(\d+)/);
+        if (match) { parentModule = `m${match[1]}`; break; }
+      }
+      el = el.parentElement;
+    }
+    if (!parentModule) return;
+
+    lbl.addEventListener('click', function(e) {
+      const result = moduleResults[parentModule];
+      const passed = result && result.score >= PASS_THRESHOLD && result.allAnswered;
+
+      if (!passed) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Показываем предупреждение
+        showBlockWarning(parentModule);
+        return false;
+      }
+    }, true); // capture phase
+  });
+
+  // Кнопка "Завершить курс" — финальная
+  document.querySelectorAll('label[for="nav-final"]').forEach(lbl => {
+    let parentModule = null;
+    let el = lbl;
+    while (el) {
+      if (el.className && typeof el.className === 'string') {
+        const match = el.className.match(/module-(\d+)/);
+        if (match) { parentModule = `m${match[1]}`; break; }
+      }
+      el = el.parentElement;
+    }
+    if (!parentModule) return;
+
+    lbl.addEventListener('click', function(e) {
+      const result = moduleResults[parentModule];
+      const passed = result && result.score >= PASS_THRESHOLD && result.allAnswered;
+      if (!passed) {
+        e.preventDefault();
+        e.stopPropagation();
+        showBlockWarning(parentModule);
+        return false;
+      }
+    }, true);
+  });
+}
+
+function showBlockWarning(moduleId) {
+  // Удаляем старый тост если есть
+  const old = document.getElementById('quiz-toast');
+  if (old) old.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'quiz-toast';
+  toast.innerHTML = `
+    <div style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(231,76,60,0.95);color:#fff;padding:16px 28px;border-radius:14px;font-family:Manrope,sans-serif;font-size:14px;font-weight:700;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);text-align:center;max-width:380px;animation:fadeInUp 0.3s ease">
+      🚫 Сначала пройди тест модуля на 80% и выше!<br>
+      <span style="font-weight:400;font-size:12px;opacity:0.85">Прокрути страницу вниз и ответь на вопросы теста</span>
+    </div>`;
+  document.body.appendChild(toast);
+
+  // Скроллим к тесту
+  const quizSection = document.querySelector(`.module-${moduleId[1]} .quiz-section`);
+  if (quizSection) {
+    quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    quizSection.style.boxShadow = '0 0 0 3px rgba(231,76,60,0.5)';
+    setTimeout(() => { quizSection.style.boxShadow = ''; }, 2000);
+  }
+
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// ============================================================
+// Визуальные индикаторы прогресса в заголовке модуля
+// ============================================================
+function updateModuleHeader(moduleId) {
+  // Добавляем прогресс-иконку в заголовок модуля при прохождении теста
+  const result = moduleResults[moduleId];
+  if (!result || !result.allAnswered) return;
+
+  const passed = result.score >= PASS_THRESHOLD;
+  const modNum = moduleId[1];
+  const header = document.querySelector(`.module-${modNum} .module-header`);
+  if (!header) return;
+
+  let badge = header.querySelector('.module-status-badge');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.className = 'module-status-badge';
+    badge.style.cssText = 'margin-left:auto;font-size:13px;font-weight:700;padding:6px 14px;border-radius:100px;';
+    header.appendChild(badge);
+  }
+
+  if (passed) {
+    badge.style.background = 'rgba(39,174,96,0.15)';
+    badge.style.border = '1px solid rgba(39,174,96,0.4)';
+    badge.style.color = '#2ecc71';
+    badge.textContent = `✓ ${Math.round(result.score * 100)}%`;
+  } else {
+    badge.style.background = 'rgba(231,76,60,0.12)';
+    badge.style.border = '1px solid rgba(231,76,60,0.3)';
+    badge.style.color = '#ff6b6b';
+    badge.textContent = `${Math.round(result.score * 100)}% ↻`;
+  }
+}
+
+// ============================================================
+// Инициализация
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Инъектируем блоки результатов
+  injectResultBlocks();
+
+  // Инициализируем все квизы
+  Object.keys(QUIZ_CONFIG).forEach(modId => {
+    initQuiz(modId, QUIZ_CONFIG[modId]);
+  });
+
+  // Перехватываем кнопки перехода
+  interceptNextButtons();
+
+  // Обновляем финальный экран при переключении на него
+  document.getElementById('nav-final').addEventListener('change', () => {
+    updateFinalScreen();
+  });
+
+  // Следим за сменой модуля через radio inputs для обновления хедера
+  Object.keys(QUIZ_CONFIG).forEach(modId => {
+    const navId = `nav-${modId}`;
+    const navInput = document.getElementById(navId);
+    if (navInput) {
+      navInput.addEventListener('change', () => {
+        updateModuleHeader(modId);
+      });
+    }
+  });
+
+  console.log('🎓 SunLife курс загружен. Квизов:', Object.keys(QUIZ_CONFIG).length);
+});
+
+window.moduleResults = moduleResults;
+window.resetQuiz = resetQuiz;
+</script>
+
+</body>
+</html>
